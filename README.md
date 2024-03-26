@@ -1,5 +1,10 @@
-# React + Vite
+# Proyecto Entregable 1 - Coderhouse
 
+## React + Vite
+
+### Martina García
+
+---------------------------------------------
 Proyecto sitio web React: entregable 1
 Curso React Coderhouse
 
