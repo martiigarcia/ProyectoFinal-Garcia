@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-import {Divider, Link, ThemeProvider} from "@mui/material";
+import {Divider, Link, Menu, MenuItem, ThemeProvider} from "@mui/material";
 import {createTheme} from "@mui/material/styles";
 import {useState} from "react";
 import CartWidget from "../CartWidgetComponent/CartWidget.jsx";
@@ -38,6 +38,14 @@ function NavBar() {
     const handleOpenMenu = () => {
         setOpenMenu(!openMenu)
     }
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
     return (
         <ThemeProvider theme={darkTheme}>
             <Box sx={{flexGrow: 1}}>
@@ -51,7 +59,7 @@ function NavBar() {
                                 marginRight: 2,
                                 marginLeft: 2,
                                 marginTop: 2,
-                                marginBottom: 5
+                                marginBottom: 5,
                             }}/>
                             <Link href="home" underline="none">
                                 <Typography
@@ -59,7 +67,7 @@ function NavBar() {
                                     variant="h6"
                                     sx={{
                                         mr: 2,
-                                        display: {xs: 'none', md: 'flex'},
+                                        display: 'flex',
                                         fontFamily: 'monospace',
                                         fontWeight: 700,
                                         color: 'secondary.main',
@@ -71,15 +79,13 @@ function NavBar() {
                                 </Typography>
                             </Link>
                             <Divider orientation="vertical" flexItem variant="middle"/>
-                            <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}, ml: 5}}>
-                                <Link href="productos" underline="none">
-                                    <Typography
-                                        sx={{my: 2, color: 'white', display: {xs: 'none', md: 'flex'},}}
-                                        onClick={handleOpenMenu}
-                                    >
-                                        Productos
-                                    </Typography>
-                                </Link>
+                            <Box sx={{flexGrow: 1, display: 'flex', ml: 5}}>
+                                <Typography
+                                    sx={{my: 2, color: 'white', display: 'flex',}}
+                                    onClick={handleClick}
+                                >
+                                    Productos
+                                </Typography>
                             </Box>
                             <Box sx={{display: 'flex', alignItems: 'center'}}>
                                 <Link href="cart" underline="none">
@@ -90,6 +96,50 @@ function NavBar() {
                     </Container>
                 </AppBar>
             </Box>
+            <Menu
+                anchorEl={anchorEl}
+                id="account-menu"
+                open={open}
+                onClose={handleClose}
+                onClick={handleClose}
+                PaperProps={{
+                    elevation: 0,
+                    style: {
+                        width: '30ch',
+                    },
+                    sx: {
+                        overflow: 'visible',
+                        filter: 'drop-shadow(1px 1px 3px rgba(255,255,255,0.3))',
+                        mt: 2.5,
+                        '&::before': {
+                            content: '""',
+                            display: 'block',
+                            position: 'absolute',
+                            top: 0,
+                            left: 40,
+                            width: 10,
+                            height: 10,
+                            bgcolor: 'background.paper',
+                            transform: 'translateY(-50%) rotate(45deg)',
+                            zIndex: 0,
+                        },
+                    },
+                }}
+                transformOrigin={{horizontal: 'left', vertical: 'top'}}
+                anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+            >
+                <Link href="cervezas" underline="none">
+                    <MenuItem onClick={handleClose} sx={{color: 'white'}}>
+                        Cervezas
+                    </MenuItem>
+                </Link>
+                <Link href="tragos" underline="none" sx={{color: 'white'}}>
+                    <MenuItem onClick={handleClose}>Tragos</MenuItem>
+                </Link>
+                <Link href="aperitivos" underline="none" sx={{color: 'white'}}>
+                    <MenuItem onClick={handleClose}>Aperitivos</MenuItem>
+                </Link>
+            </Menu>
         </ThemeProvider>
     )
         ;
