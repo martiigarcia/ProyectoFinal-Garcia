@@ -1,6 +1,6 @@
 import * as React from 'react';
-import viteLogo from '/vite.svg'
-import LogoDrink from '/logoDrink.png'
+import viteLogo from '/Users/archivos/uni/cursoReact/primerEntrega/createMyLanding/public/vite.svg'
+import LogoDrink from '/Users/archivos/uni/cursoReact/primerEntrega/createMyLanding/public/logoDrink.png'
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,7 +12,7 @@ import Button from '@mui/material/Button';
 import {Divider, Link, Menu, MenuItem, ThemeProvider} from "@mui/material";
 import {createTheme} from "@mui/material/styles";
 import {useState} from "react";
-import CartWidget from "../CartWidgetComponent/CartWidget.jsx";
+import CartWidget from "../../CartWidget/CartWidget.jsx";
 
 
 function NavBar() {
@@ -61,7 +61,7 @@ function NavBar() {
                                 marginTop: 2,
                                 marginBottom: 5,
                             }}/>
-                            <Link href="home" underline="none">
+                            <Link href="/" underline="none">
                                 <Typography
                                     className="title"
                                     variant="h6"
@@ -128,16 +128,16 @@ function NavBar() {
                 transformOrigin={{horizontal: 'left', vertical: 'top'}}
                 anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
             >
-                <Link href="cervezas" underline="none">
+                <Link href="beers" underline="none">
                     <MenuItem onClick={handleClose} sx={{color: 'white'}}>
                         Cervezas
                     </MenuItem>
                 </Link>
-                <Link href="tragos" underline="none" sx={{color: 'white'}}>
+                <Link href="drinks" underline="none" sx={{color: 'white'}}>
                     <MenuItem onClick={handleClose}>Tragos</MenuItem>
                 </Link>
-                <Link href="aperitivos" underline="none" sx={{color: 'white'}}>
-                    <MenuItem onClick={handleClose}>Aperitivos</MenuItem>
+                <Link href="cocktails" underline="none" sx={{color: 'white'}}>
+                    <MenuItem onClick={handleClose}>Cocteles</MenuItem>
                 </Link>
             </Menu>
         </ThemeProvider>
