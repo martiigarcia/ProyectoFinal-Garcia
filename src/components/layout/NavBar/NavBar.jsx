@@ -1,24 +1,145 @@
 import * as React from 'react';
-import viteLogo from '/Users/archivos/uni/cursoReact/primerEntrega/createMyLanding/public/vite.svg'
 import LogoDrink from '/Users/archivos/uni/cursoReact/primerEntrega/createMyLanding/public/logoDrink.png'
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-import {Divider, Link, Menu, MenuItem, ThemeProvider} from "@mui/material";
+import {styled, alpha} from '@mui/material/styles';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Divider from '@mui/material/Divider';
+import {ThemeProvider} from "@mui/material";
 import {createTheme} from "@mui/material/styles";
-import {useState} from "react";
 import CartWidget from "../../CartWidget/CartWidget.jsx";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore.js";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess.js";
+import Link from "@mui/material/Link";
 
+
+const StyledMenu = styled((props) => (
+    <Menu
+        elevation={0}
+        anchorOrigin={{
+            horizontal: 'left', vertical: 'bottom'
+        }}
+        transformOrigin={{
+            horizontal: 'left', vertical: 'top'
+        }}
+        PaperProps={{
+            style: {
+                width: '30ch',
+            },
+            sx: {
+                overflow: 'visible',
+                filter: 'drop-shadow(1px 1px 3px rgba(255,255,255,0.3))',
+                mt: 2.5,
+                '&::before': {
+                    content: '""',
+                    display: 'block',
+                    position: 'absolute',
+                    top: 0,
+                    left: 40,
+                    width: 10,
+                    height: 10,
+                    bgcolor: 'background.paper',
+                    transform: 'translateY(-50%) rotate(45deg)',
+                    zIndex: 0,
+                },
+            },
+        }}
+        {...props}
+    />
+))(({theme}) => ({
+    '& .MuiPaper-root': {
+        borderRadius: 6,
+        marginTop: theme.spacing(1),
+        minWidth: 180,
+        color:
+            theme.palette.mode === 'light' ? 'rgb(140,65,255)' : '#e05eff',
+        boxShadow:
+            'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
+        '& .MuiMenu-list': {
+            padding: '4px 0',
+        },
+        '& .MuiMenuItem-root': {
+            '&:active': {
+                backgroundColor: '#e05eff'
+                // backgroundColor: alpha(
+                //     theme.palette.primary.main,
+                //     theme.palette.action.selectedOpacity,
+                // ),
+            },
+        },
+    },
+}));
+
+function BeerMenu() {
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [expanded, setExpanded] = React.useState(false);
+    const open = Boolean(anchorEl);
+
+    const handleClick = (event) => {
+        setExpanded(!expanded)
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setExpanded(!expanded)
+        setAnchorEl(null);
+    };
+
+    return (
+        <>
+            <Button
+                id="beer-option-button"
+                aria-controls={open ? 'beer-option-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? 'true' : undefined}
+                disableElevation
+                onClick={handleClick}
+                endIcon={expanded ?
+                    <ExpandLessIcon/> :
+                    <ExpandMoreIcon/>}
+                sx={{color: '#ffffff'}}
+            >
+                Cervezas
+            </Button>
+            <StyledMenu
+                id="beer-option-menu"
+                MenuListProps={{
+                    'beer-option': 'beer-option-button',
+                }}
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+            >
+                <Link href="/beer-type/lager" underline="none">
+                    <MenuItem sx={{color: 'white'}}>
+                        Rubia
+                    </MenuItem>
+                </Link>
+                <Link href="/beer-type/red" underline="none">
+                    <MenuItem sx={{color: 'white'}}>
+                        Roja
+                    </MenuItem>
+                </Link>
+                <Link href="/beer-type/black" underline="none">
+                    <MenuItem sx={{color: 'white'}}>
+                        Negra
+                    </MenuItem>
+                </Link>
+                <Link href="/beer-type/ipa" underline="none">
+                    <MenuItem sx={{color: 'white'}}>
+                        IPA
+                    </MenuItem>
+                </Link>
+            </StyledMenu>
+        </>
+    );
+}
 
 function NavBar() {
-
-    const [openMenu, setOpenMenu] = useState(false)
-
     const darkTheme = createTheme({
         palette: {
             mode: 'dark',
@@ -35,17 +156,6 @@ function NavBar() {
         },
     });
 
-    const handleOpenMenu = () => {
-        setOpenMenu(!openMenu)
-    }
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
     return (
         <ThemeProvider theme={darkTheme}>
             <Box sx={{flexGrow: 1}}>
@@ -80,12 +190,7 @@ function NavBar() {
                             </Link>
                             <Divider orientation="vertical" flexItem variant="middle"/>
                             <Box sx={{flexGrow: 1, display: 'flex', ml: 5}}>
-                                <Typography
-                                    sx={{my: 2, color: 'white', display: 'flex',}}
-                                    onClick={handleClick}
-                                >
-                                    Productos
-                                </Typography>
+                                <BeerMenu/>
                             </Box>
                             <Box sx={{display: 'flex', alignItems: 'center'}}>
                                 <Link href="cart" underline="none">
@@ -96,53 +201,13 @@ function NavBar() {
                     </Container>
                 </AppBar>
             </Box>
-            <Menu
-                anchorEl={anchorEl}
-                id="account-menu"
-                open={open}
-                onClose={handleClose}
-                onClick={handleClose}
-                PaperProps={{
-                    elevation: 0,
-                    style: {
-                        width: '30ch',
-                    },
-                    sx: {
-                        overflow: 'visible',
-                        filter: 'drop-shadow(1px 1px 3px rgba(255,255,255,0.3))',
-                        mt: 2.5,
-                        '&::before': {
-                            content: '""',
-                            display: 'block',
-                            position: 'absolute',
-                            top: 0,
-                            left: 40,
-                            width: 10,
-                            height: 10,
-                            bgcolor: 'background.paper',
-                            transform: 'translateY(-50%) rotate(45deg)',
-                            zIndex: 0,
-                        },
-                    },
-                }}
-                transformOrigin={{horizontal: 'left', vertical: 'top'}}
-                anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-            >
-                <Link href="beers" underline="none">
-                    <MenuItem onClick={handleClose} sx={{color: 'white'}}>
-                        Cervezas
-                    </MenuItem>
-                </Link>
-                <Link href="drinks" underline="none" sx={{color: 'white'}}>
-                    <MenuItem onClick={handleClose}>Tragos</MenuItem>
-                </Link>
-                <Link href="cocktails" underline="none" sx={{color: 'white'}}>
-                    <MenuItem onClick={handleClose}>Cocteles</MenuItem>
-                </Link>
-            </Menu>
+
+
         </ThemeProvider>
-    )
-        ;
+    );
 }
 
 export default NavBar;
+
+
+

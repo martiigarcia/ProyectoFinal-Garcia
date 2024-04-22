@@ -19,16 +19,16 @@ function Copyright() {
 
 function Footer({description, title}) {
 
-    const location = window.location.pathname === "/item";
-
     return (
         <>
-            {console.log(location)}
             <Box
                 component="footer"
                 sx={{
+                    mt:5,
+                    mb:3,
                     width: '100%',
-                    position: location ? 'relative' : 'absolute',
+                    // position: location ? 'relative' : 'absolute',
+                    position: 'relative', //Aca hay que ver cuando esten los otro componentes de carrito para modificarlo
                     bottom: 0,
                     zIndex: 1000, // Asegura que el Footer esté sobre otros elementos
                 }}
