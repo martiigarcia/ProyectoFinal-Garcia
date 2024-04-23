@@ -158,7 +158,7 @@ function NavBar() {
 
     return (
         <ThemeProvider theme={darkTheme}>
-            <Box sx={{flexGrow: 1}}>
+            <Box sx={{flexGrow: 1, mb: 5}}>
                 <AppBar position="static" color="primary" enableColorOnDark>
                     <Container maxWidth="xl">
                         <Toolbar>

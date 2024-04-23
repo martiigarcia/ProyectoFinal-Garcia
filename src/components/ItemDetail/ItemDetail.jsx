@@ -17,18 +17,35 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import Link from "@mui/material/Link";
+import {Box, Grid, Tooltip, tooltipClasses} from "@mui/material";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart.js";
+import Divider from "@mui/material/Divider";
+import ItemCount from "../ItemCount/ItemCount.jsx";
 
-
-const ExpandMore = styled((props) => {
-    const {expand, ...other} = props;
-    return <IconButton {...other} />;
-})(({theme, expand}) => ({
-    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-    marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-        duration: theme.transitions.duration.shortest,
-    }),
+const LightTooltip = styled(({className, ...props}) => (
+    <Tooltip {...props} classes={{popper: className}}/>
+))(({theme}) => ({
+    [`& .${tooltipClasses.arrow}`]: {
+        color: theme.palette.common.white,
+    },
+    [`& .${tooltipClasses.tooltip}`]: {
+        backgroundColor: theme.palette.common.white,
+        color: 'rgba(0, 0, 0, 0.87)',
+        boxShadow: theme.shadows[1],
+        fontSize: 11,
+    },
 }));
+
+// const ExpandMore = styled((props) => {
+//     const {expand, ...other} = props;
+//     return <IconButton {...other} />;
+// })(({theme, expand}) => ({
+//     transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+//     marginLeft: 'auto',
+//     transition: theme.transitions.create('transform', {
+//         duration: theme.transitions.duration.shortest,
+//     }),
+// }));
 
 export default function ItemDetail({product}) {
     const [expanded, setExpanded] = React.useState(false);
@@ -52,7 +69,7 @@ export default function ItemDetail({product}) {
             setCategory("I")
             setColor(orange[500])
         }
-    }, []);
+    }, [product]);
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
@@ -60,85 +77,107 @@ export default function ItemDetail({product}) {
 
     return (
         <>
-            <Card sx={{maxWidth: 345, mt: 5}}>
-                <CardHeader
-                    avatar={
-                        <Avatar
-                            sx={{
-                                bgcolor: color,
-                                color: color === "#212121" ? "#ffffff" : "#000000",
-                                border: "2px solid #ffffff"
-                            }}
-                            aria-label="recipe">
-                            {category}
-                        </Avatar>
-                    }
-                    title={product.name}
-                    subheader={product.priceperpinta}
-                />
-                <CardMedia
-                    component="img"
-                    height="194"
-                    image="https://periodicodigital.mx/wp-content/uploads/2023/06/que-es-la-cerveza-rubia.jpg"
-                    alt="Paella dish"
-                />
-                <CardContent>
-                    <Typography variant="body2" color="text.secondary">
-                        This impressive paella is a perfect party dish and a fun meal to cook
-                        together with your guests. Add 1 cup of frozen peas along with the mussels,
-                        if you like.
-                    </Typography>
-                </CardContent>
-                <CardActions disableSpacing>
-                    <IconButton aria-label="add to favorites">
-                        <FavoriteIcon style={{color: "#AF44CC"}}/>
-                    </IconButton>
-                    <Link href={"/item/" + product.id}>
-                        <IconButton aria-label="detail">
-                            <InfoOutlinedIcon
-                                style={{color: "#AF44CC"}}
-                            />
+            <Card
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    mt: "auto",
+                    mb: "auto",
+                    width: "75%",
+                }}
+            >
+                <Box sx={{flexGrow: 1}}>
+                    <Grid container spacing={2}>
 
-                        </IconButton>
-                    </Link>
-                    <ExpandMore
-                        expand={expanded}
-                        onClick={handleExpandClick}
-                        aria-expanded={expanded}
-                        aria-label="show more"
-                    >
-                        <ExpandMoreIcon/>
-                    </ExpandMore>
-                </CardActions>
-                <Collapse in={expanded} timeout="auto" unmountOnExit>
-                    <CardContent>
-                        <Typography paragraph>Method:</Typography>
-                        <Typography paragraph>
-                            Heat 1/2 cup of the broth in a pot until simmering, add saffron and set
-                            aside for 10 minutes.
-                        </Typography>
-                        <Typography paragraph>
-                            Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over
-                            medium-high heat. Add chicken, shrimp and chorizo, and cook, stirring
-                            occasionally until lightly browned, 6 to 8 minutes. Transfer shrimp to a
-                            large plate and set aside, leaving chicken and chorizo in the pan. Add
-                            pimentón, bay leaves, garlic, tomatoes, onion, salt and pepper, and cook,
-                            stirring often until thickened and fragrant, about 10 minutes. Add
-                            saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.
-                        </Typography>
-                        <Typography paragraph>
-                            Add rice and stir very gently to distribute. Top with artichokes and
-                            peppers, and cook without stirring, until most of the liquid is absorbed,
-                            15 to 18 minutes. Reduce heat to medium-low, add reserved shrimp and
-                            mussels, tucking them down into the rice, and cook again without
-                            stirring, until mussels have opened and rice is just tender, 5 to 7
-                            minutes more. (Discard any mussels that don&apos;t open.)
-                        </Typography>
-                        <Typography>
-                            Set aside off of the heat to let rest for 10 minutes, and then serve.
-                        </Typography>
-                    </CardContent>
-                </Collapse>
+                        {/*Header: */}
+                        <Grid item xs={12}>
+                            <CardHeader
+                                avatar={
+                                    <Avatar
+                                        sx={{
+                                            bgcolor: color,
+                                            color: color === "#212121" ? "#ffffff" : "#000000",
+                                            border: "2px solid #ffffff"
+                                        }}
+                                        aria-label="avatar">
+                                        {category}
+                                    </Avatar>
+                                }
+                                title={product.name}
+                                subheader={"Precio por pinta: $" + product.priceperpinta}
+                            />
+                        </Grid>
+
+                        {/*Imagen del producto: */}
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Grid item xs={12} sx={{ml: 2, mr: 2, mb: 2}}>
+                                <CardMedia
+                                    sx={{width: '100%', height: 'auto'}}
+                                    component="img"
+                                    image="https://periodicodigital.mx/wp-content/uploads/2023/06/que-es-la-cerveza-rubia.jpg"
+                                    alt="Foto del producto"
+                                />
+                            </Grid>
+
+
+                        </Grid>
+
+                        {/*Informacion del producto: */}
+                        <Grid item xs={12} sm={12} md={6}>
+                            {/*Descripcion: */}
+                            <Grid item xs={12} sm={12} md={12}>
+                                <Typography
+                                    sx={{
+                                        m: "auto",
+                                    }}
+                                >
+                                    {product.description}
+                                </Typography>
+                                <Divider sx={{
+                                    mt: 1, mb: 1
+                                }}/>
+                            </Grid>
+
+                            <Grid item xs={12} sm={12} md={12} sx={{ml: 2, mr: 2}}>
+
+                                {/*Informacion:*/}
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12} sm={12} md={6}>
+                                        <Typography sx={{textAlign: 'left'}}>Alcohol: {product.alcohol}%</Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={12} md={6}>
+                                        <Typography sx={{textAlign: 'left'}}>IBU: {product.ibu}</Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={12} md={6}>
+                                        <Typography sx={{textAlign: 'left'}}>Sabor: {product.taste}</Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={12} md={6}>
+                                        <Typography sx={{textAlign: 'left'}}>Color: {product.color}</Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={12} md={6}>
+                                        <Typography sx={{textAlign: 'left'}}>Cuerpo: {product.body}</Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={12} md={6}>
+                                        <Typography sx={{textAlign: 'left'}}>Espuma: {product.foam}</Typography>
+                                    </Grid>
+                                </Grid>
+
+                                {/*Botones: */}
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justifyContent="center"
+                                    alignItems="flex-end"
+                                    // sx={{mt: 5}}
+                                >
+                                    <ItemCount product={product}/>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Box>
             </Card>
         </>
     );
