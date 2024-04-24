@@ -3,7 +3,7 @@ import './App.css'
 import NavBar from "./components/layout/NavBar/NavBar.jsx";
 import ItemListContainer from "./components/listComponents/ItemListContainer/ItemListContainer.jsx";
 import Footer from "./components/layout/Footer/Footer.jsx";
-import ItemDetailContainer from "./components/ItemDetailContainer/ItemDetailContainer.jsx";
+import ItemDetailContainer from "./components/detailComponents/ItemDetailContainer/ItemDetailContainer.jsx";
 import PageNotFound from "./components/PageNotFound/PageNotFound.jsx";
 
 function App() {

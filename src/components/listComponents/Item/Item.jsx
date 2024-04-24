@@ -59,7 +59,12 @@ export default function Item({product}) {
                                     sx={{
                                         bgcolor: color,
                                         color: color === "#212121" ? "#ffffff" : "#000000",
-                                        border: "2px solid #ffffff"
+                                        border: "2px solid #ffffff",
+                                        '&:hover': {
+                                            color: 'white',
+                                            borderColor: '#AF44CC',
+                                            backgroundColor: "#AF44CC"
+                                        },
                                     }}
                                     aria-label="recipe">
                                     {category}
@@ -72,7 +77,7 @@ export default function Item({product}) {
                 <CardMedia
                     component="img"
                     height="194"
-                    image="https://periodicodigital.mx/wp-content/uploads/2023/06/que-es-la-cerveza-rubia.jpg"
+                    image={product.image}
                     alt="image of a beer"
                 />
                 <CardContent>

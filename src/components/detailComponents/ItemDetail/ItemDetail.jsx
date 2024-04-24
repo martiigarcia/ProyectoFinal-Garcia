@@ -75,7 +75,7 @@ export default function ItemDetail({product}) {
                                 <CardMedia
                                     sx={{width: '100%', height: 'auto'}}
                                     component="img"
-                                    image="https://periodicodigital.mx/wp-content/uploads/2023/06/que-es-la-cerveza-rubia.jpg"
+                                    image={product.image}
                                     alt="Foto del producto"
                                 />
                             </Grid>

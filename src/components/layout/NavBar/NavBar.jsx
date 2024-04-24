@@ -11,7 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
 import {ThemeProvider} from "@mui/material";
 import {createTheme} from "@mui/material/styles";
-import CartWidget from "../../CartWidget/CartWidget.jsx";
+import CartWidget from "../CartWidget/CartWidget.jsx";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore.js";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess.js";
 import {Link} from "react-router-dom";
