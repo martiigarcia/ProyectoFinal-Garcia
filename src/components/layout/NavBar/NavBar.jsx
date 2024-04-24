@@ -157,16 +157,16 @@ function NavBar() {
 
     return (
         <ThemeProvider theme={darkTheme}>
-            <Box sx={{flexGrow: 1, mb: 5, width: "100%"}}>
-                <AppBar position="static" color="primary" enableColorOnDark>
+            <Box sx={{flexGrow: 1, mb: 10, width: "100%"}}>
+                <AppBar position="fixed" color="primary" enableColorOnDark>
                     <Toolbar>
                         <img src={LogoDrink} style={{
                             width: 50,
                             height: 60,
-                            marginRight: 2,
-                            marginLeft: 2,
-                            marginTop: 2,
-                            marginBottom: 5,
+                            mr: 2,
+                            ml: 2,
+                            mt: 2,
+                            mb: 5,
                         }}/>
                         <Link to="/" underline="none">
                             <Typography

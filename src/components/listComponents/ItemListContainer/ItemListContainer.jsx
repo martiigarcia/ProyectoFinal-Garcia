@@ -35,13 +35,9 @@ function ItemListContainer() {
     return (
         <>
             <Box sx={{
-                m: 2,
                 display: "flex",
                 flexDirection: "column",
-                ml: "auto",
-                mr: "auto",
-                mt: "auto",
-                mb: "auto",
+                m: "auto",
                 width: "75%",
             }}>
                 <ItemList products={products}/>
