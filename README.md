@@ -14,6 +14,10 @@ E-Commerce sobre venta de cervezas, tragos y aperitivos.
 Visualizacion del proyecto:
 ![img.png](img.png)
 
+![img_2.png](img_2.png)
+
+
+---------------------------------------------
 # Para ejecutar este proyecto
 
 1. Descargar o clonar el proyecto
