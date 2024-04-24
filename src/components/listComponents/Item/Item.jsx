@@ -22,7 +22,7 @@ const categoryColorMap = { //Ver si es mejor dejar toodo junto (incial y color) 
 };
 
 const LightTooltip = styled(({className, ...props}) => (
-    <Tooltip {...props} classes={{popper: className}}/>
+    <Tooltip {...props} classes={{popper: className}} />
 ))(({theme}) => ({
     [`& .${tooltipClasses.arrow}`]: {
         color: theme.palette.common.white,
@@ -53,15 +53,19 @@ export default function Item({product}) {
             <Card sx={{maxWidth: 345}}>
                 <CardHeader
                     avatar={
-                        <Avatar
-                            sx={{
-                                bgcolor: color,
-                                color: color === "#212121" ? "#ffffff" : "#000000",
-                                border: "2px solid #ffffff"
-                            }}
-                            aria-label="recipe">
-                            {category}
-                        </Avatar>
+                        <>
+                            <LightTooltip title={"Cerveza " + product.type} arrow placement="top">
+                                <Avatar
+                                    sx={{
+                                        bgcolor: color,
+                                        color: color === "#212121" ? "#ffffff" : "#000000",
+                                        border: "2px solid #ffffff"
+                                    }}
+                                    aria-label="recipe">
+                                    {category}
+                                </Avatar>
+                            </LightTooltip>
+                        </>
                     }
                     title={product.name}
                 />
@@ -99,14 +103,6 @@ export default function Item({product}) {
                                     }}
                                     endIcon={
                                         <InfoOutlinedIcon
-                                            style={{
-                                                color: "#AF44CC",
-                                            }}
-                                            sx={{
-                                                '&:hover': {
-                                                    color: '#ffffff',
-                                                }
-                                            }}
                                         />}
                             >Ver en detalle
                             </Button>
