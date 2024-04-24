@@ -4,9 +4,8 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-import {styled, alpha} from '@mui/material/styles';
+import {styled} from '@mui/material/styles';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
@@ -15,7 +14,7 @@ import {createTheme} from "@mui/material/styles";
 import CartWidget from "../../CartWidget/CartWidget.jsx";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore.js";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess.js";
-import Link from "@mui/material/Link";
+import {Link} from "react-router-dom";
 
 
 const StyledMenu = styled((props) => (
@@ -114,23 +113,23 @@ function BeerMenu() {
                 open={open}
                 onClose={handleClose}
             >
-                <Link href="/beer-type/lager" underline="none">
-                    <MenuItem sx={{color: 'white'}}>
+                <Link to="/beer-type/lager" underline="none">
+                    <MenuItem sx={{color: 'white'}} onClick={handleClose}>
                         Rubia
                     </MenuItem>
                 </Link>
-                <Link href="/beer-type/red" underline="none">
-                    <MenuItem sx={{color: 'white'}}>
+                <Link to="/beer-type/red" underline="none">
+                    <MenuItem sx={{color: 'white'}} onClick={handleClose}>
                         Roja
                     </MenuItem>
                 </Link>
-                <Link href="/beer-type/black" underline="none">
-                    <MenuItem sx={{color: 'white'}}>
+                <Link to="/beer-type/black" underline="none">
+                    <MenuItem sx={{color: 'white'}} onClick={handleClose}>
                         Negra
                     </MenuItem>
                 </Link>
-                <Link href="/beer-type/ipa" underline="none">
-                    <MenuItem sx={{color: 'white'}}>
+                <Link to="/beer-type/ipa" underline="none">
+                    <MenuItem sx={{color: 'white'}} onClick={handleClose}>
                         IPA
                     </MenuItem>
                 </Link>
@@ -158,47 +157,44 @@ function NavBar() {
 
     return (
         <ThemeProvider theme={darkTheme}>
-            <Box sx={{flexGrow: 1, mb: 5}}>
+            <Box sx={{flexGrow: 1, mb: 5, width: "100%"}}>
                 <AppBar position="static" color="primary" enableColorOnDark>
-                    <Container maxWidth="xl">
-                        <Toolbar>
-
-                            <img src={LogoDrink} style={{
-                                width: 50,
-                                height: 60,
-                                marginRight: 2,
-                                marginLeft: 2,
-                                marginTop: 2,
-                                marginBottom: 5,
-                            }}/>
-                            <Link href="/" underline="none">
-                                <Typography
-                                    className="title"
-                                    variant="h6"
-                                    sx={{
-                                        mr: 2,
-                                        display: 'flex',
-                                        fontFamily: 'monospace',
-                                        fontWeight: 700,
-                                        color: 'secondary.main',
-                                        textDecoration: 'none',
-                                        textShadow: '1px 1px 20px rgba(255, 255, 255, 1)',
-                                    }}
-                                >
-                                    Brewland Oasis
-                                </Typography>
+                    <Toolbar>
+                        <img src={LogoDrink} style={{
+                            width: 50,
+                            height: 60,
+                            marginRight: 2,
+                            marginLeft: 2,
+                            marginTop: 2,
+                            marginBottom: 5,
+                        }}/>
+                        <Link to="/" underline="none">
+                            <Typography
+                                className="title"
+                                variant="h6"
+                                sx={{
+                                    mr: 2,
+                                    display: 'flex',
+                                    fontFamily: 'monospace',
+                                    fontWeight: 700,
+                                    color: 'secondary.main',
+                                    textDecoration: 'none',
+                                    textShadow: '1px 1px 20px rgba(255, 255, 255, 1)',
+                                }}
+                            >
+                                Brewland Oasis
+                            </Typography>
+                        </Link>
+                        <Divider orientation="vertical" flexItem variant="middle"/>
+                        <Box sx={{flexGrow: 1, display: 'flex', ml: 5}}>
+                            <BeerMenu/>
+                        </Box>
+                        <Box sx={{display: 'flex', alignItems: 'center'}}>
+                            <Link to="cart" underline="none">
+                                <CartWidget/>
                             </Link>
-                            <Divider orientation="vertical" flexItem variant="middle"/>
-                            <Box sx={{flexGrow: 1, display: 'flex', ml: 5}}>
-                                <BeerMenu/>
-                            </Box>
-                            <Box sx={{display: 'flex', alignItems: 'center'}}>
-                                <Link href="cart" underline="none">
-                                    <CartWidget/>
-                                </Link>
-                            </Box>
-                        </Toolbar>
-                    </Container>
+                        </Box>
+                    </Toolbar>
                 </AppBar>
             </Box>
 

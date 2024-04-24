@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Box, Typography} from "@mui/material";
+import {Box} from "@mui/material";
 import ItemList from "../ItemList/ItemList.jsx";
 import {getProducts, getProductsByCategory} from "../../../data/asyncMock.jsx";
 import {useParams} from "react-router-dom";
@@ -34,7 +34,16 @@ function ItemListContainer() {
 
     return (
         <>
-            <Box>
+            <Box sx={{
+                m: 2,
+                display: "flex",
+                flexDirection: "column",
+                ml: "auto",
+                mr: "auto",
+                mt: "auto",
+                mb: "auto",
+                width: "75%",
+            }}>
                 <ItemList products={products}/>
             </Box>
         </>

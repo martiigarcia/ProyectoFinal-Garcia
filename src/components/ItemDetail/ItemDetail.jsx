@@ -1,51 +1,21 @@
 import * as React from 'react';
 import {useEffect, useState} from "react";
-import {styled} from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import Collapse from '@mui/material/Collapse';
 import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import {amber, blue, grey, orange, red} from '@mui/material/colors';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import Link from "@mui/material/Link";
-import {Box, Grid, Tooltip, tooltipClasses} from "@mui/material";
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart.js";
+import {Box, Grid} from "@mui/material";
 import Divider from "@mui/material/Divider";
 import ItemCount from "../ItemCount/ItemCount.jsx";
 
-const LightTooltip = styled(({className, ...props}) => (
-    <Tooltip {...props} classes={{popper: className}}/>
-))(({theme}) => ({
-    [`& .${tooltipClasses.arrow}`]: {
-        color: theme.palette.common.white,
-    },
-    [`& .${tooltipClasses.tooltip}`]: {
-        backgroundColor: theme.palette.common.white,
-        color: 'rgba(0, 0, 0, 0.87)',
-        boxShadow: theme.shadows[1],
-        fontSize: 11,
-    },
-}));
-
-// const ExpandMore = styled((props) => {
-//     const {expand, ...other} = props;
-//     return <IconButton {...other} />;
-// })(({theme, expand}) => ({
-//     transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-//     marginLeft: 'auto',
-//     transition: theme.transitions.create('transform', {
-//         duration: theme.transitions.duration.shortest,
-//     }),
-// }));
+const categoryColorMap = {
+    "Rubia": { category: "R", color: amber[500] },
+    "Roja": { category: "R", color: red[500] },
+    "Negra": { category: "N", color: grey[900] },
+    "IPA": { category: "I", color: orange[500] },
+};
 
 export default function ItemDetail({product}) {
     const [expanded, setExpanded] = React.useState(false);
@@ -53,21 +23,10 @@ export default function ItemDetail({product}) {
     const [color, setColor] = useState(null)
 
     useEffect(() => {
-        if (product.type === "Rubia") {
-            setCategory("R")
-            setColor(amber[500])
-        }
-        if (product.type === "Roja") {
-            setCategory("R")
-            setColor(red[500])
-        }
-        if (product.type === "Negra") {
-            setCategory("N")
-            setColor(grey[900])
-        }
-        if (product.type === "IPA") {
-            setCategory("I")
-            setColor(orange[500])
+        const { category, color } = categoryColorMap[product.type] || {};
+        if (category && color) {
+            setCategory(category);
+            setColor(color);
         }
     }, [product]);
 
@@ -81,8 +40,8 @@ export default function ItemDetail({product}) {
                 sx={{
                     display: "flex",
                     flexDirection: "column",
-                    marginLeft: "auto",
-                    marginRight: "auto",
+                    ml: "auto",
+                    mr: "auto",
                     mt: "auto",
                     mb: "auto",
                     width: "75%",

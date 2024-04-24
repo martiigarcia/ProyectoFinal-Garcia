@@ -6,19 +6,20 @@ import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
-import Collapse from '@mui/material/Collapse';
 import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import {amber, blue, grey, orange, red} from '@mui/material/colors';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import {amber, grey, orange, red} from '@mui/material/colors';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import Link from "@mui/material/Link";
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import {Link} from "react-router-dom";
 import {Tooltip, tooltipClasses} from "@mui/material";
+import Button from "@mui/material/Button";
+
+const categoryColorMap = { //Ver si es mejor dejar toodo junto (incial y color) o que solo quede con el color
+    "Rubia": {category: "R", color: amber[500]},
+    "Roja": {category: "R", color: red[500]},
+    "Negra": {category: "N", color: grey[900]},
+    "IPA": {category: "I", color: orange[500]},
+};
 
 const LightTooltip = styled(({className, ...props}) => (
     <Tooltip {...props} classes={{popper: className}}/>
@@ -36,32 +37,16 @@ const LightTooltip = styled(({className, ...props}) => (
 
 
 export default function Item({product}) {
-    const [expanded, setExpanded] = React.useState(false);
     const [category, setCategory] = useState(null)
     const [color, setColor] = useState(null)
 
     useEffect(() => {
-        if (product.type === "Rubia") {
-            setCategory("R")
-            setColor(amber[500])
-        }
-        if (product.type === "Roja") {
-            setCategory("R")
-            setColor(red[500])
-        }
-        if (product.type === "Negra") {
-            setCategory("N")
-            setColor(grey[900])
-        }
-        if (product.type === "IPA") {
-            setCategory("I")
-            setColor(orange[500])
+        setCategory(product.type.charAt(0).toUpperCase());
+        const {category, color} = categoryColorMap[product.type] || {};
+        if (category && color) {
+            setColor(color);
         }
     }, []);
-
-    const handleExpandClick = () => {
-        setExpanded(!expanded);
-    };
 
     return (
         <>
@@ -91,30 +76,49 @@ export default function Item({product}) {
                         Precio por pinta: $ {product.priceperpinta}
                     </Typography>
                 </CardContent>
-                <CardActions disableSpacing>
-                    <LightTooltip title="Marcar Favorita" arrow>
-                        <IconButton aria-label="add to favorites">
-                            <FavoriteIcon
-                                style={{color: "#AF44CC"}}
-                            />
-                        </IconButton>
-                    </LightTooltip>
+                <CardActions disableSpacing sx={{textAlign: 'center', display: 'flex', justifyContent: 'center'}}>
+                    {/*<LightTooltip title="Marcar Favorita" arrow>*/}
+                    {/*    <IconButton aria-label="add to favorites">*/}
+                    {/*        <FavoriteIcon*/}
+                    {/*            style={{color: "#AF44CC"}}*/}
+                    {/*        />*/}
+                    {/*    </IconButton>*/}
+                    {/*</LightTooltip>*/}
                     <LightTooltip title="Ver detalle de cerveza" arrow>
-                        <Link href={"/item/" + product.id}>
-                            <IconButton aria-label="detail">
-                                <InfoOutlinedIcon
-                                    style={{color: "#AF44CC"}}
-                                />
-                            </IconButton>
+                        <Link to={"/item/" + product.id}>
+                            <Button aria-label="detail"
+                                // variant="outlined"
+                                    sx={{
+                                        borderColor: '#AF44CC',
+                                        color: '#AF44CC',
+                                        '&:hover': {
+                                            color: 'white',
+                                            borderColor: '#AF44CC',
+                                            backgroundColor: "#AF44CC"
+                                        },
+                                    }}
+                                    endIcon={
+                                        <InfoOutlinedIcon
+                                            style={{
+                                                color: "#AF44CC",
+                                            }}
+                                            sx={{
+                                                '&:hover': {
+                                                    color: '#ffffff',
+                                                }
+                                            }}
+                                        />}
+                            >Ver en detalle
+                            </Button>
                         </Link>
                     </LightTooltip>
-                    <LightTooltip title="Añadir al carrito" arrow>
-                        <IconButton aria-label="add to shopping cart" sx={{ml: 'auto'}}>
-                            <AddShoppingCartIcon
-                                style={{color: "#AF44CC"}}
-                            />
-                        </IconButton>
-                    </LightTooltip>
+                    {/*<LightTooltip title="Añadir al carrito" arrow>*/}
+                    {/*    <IconButton aria-label="add to shopping cart" sx={{ml: 'auto'}}>*/}
+                    {/*        <AddShoppingCartIcon*/}
+                    {/*            style={{color: "#AF44CC"}}*/}
+                    {/*        />*/}
+                    {/*    </IconButton>*/}
+                    {/*</LightTooltip>*/}
                 </CardActions>
             </Card>
         </>

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import ItemDetail from "../ItemDetail/ItemDetail.jsx";
-import {getProductById, getProducts, getProductsByCategory} from "../../data/asyncMock.jsx";
+import {getProductById} from "../../data/asyncMock.jsx";
 
 function ItemDetailContainer() {
     const [product, setProduct] = useState({});

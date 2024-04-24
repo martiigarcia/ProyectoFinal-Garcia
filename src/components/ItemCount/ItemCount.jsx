@@ -1,35 +1,35 @@
 import React, {useState} from 'react';
-import IconButton from "@mui/material/IconButton";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart.js";
-import {Box, ButtonGroup, Stack, Tooltip, tooltipClasses, Typography} from "@mui/material";
+import {Box, Stack, Tooltip, tooltipClasses, Typography} from "@mui/material";
 import Button from "@mui/material/Button";
-import {styled} from "@mui/material/styles";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
-const LightTooltip = styled(({className, ...props}) => (
-    <Tooltip {...props} classes={{popper: className}}/>
-))(({theme}) => ({
-    [`& .${tooltipClasses.arrow}`]: {
-        color: theme.palette.common.white,
-    },
-    [`& .${tooltipClasses.tooltip}`]: {
-        backgroundColor: theme.palette.common.white,
-        color: 'rgba(0, 0, 0, 0.87)',
-        boxShadow: theme.shadows[1],
-        fontSize: 11,
-    },
-}));
+const MySwal = withReactContent(Swal)
 
 function ItemCount({product}) {
-    const [count, setCount] = useState(0);
+    const [count, setCount] = useState(1);
 
     const handleInc = () => {
         if (product.stock > count)
             setCount(count + 1)
     }
     const handleDec = () => {
-        if (count > 0) {
+        if (count > 1) {
             setCount(count - 1)
         }
+    }
+
+    const handleClick = () => {
+        const text = `Se han agregado ${count} productos al carrito exitosamente.`;
+
+        MySwal.fire({
+            title: <p>¡Éxito!</p>,
+            html: text,
+            icon: "success",
+        }).then(() => {
+           console.log("Exito...")
+        })
     }
 
 
@@ -52,7 +52,7 @@ function ItemCount({product}) {
                                 },
                             }}
                             onClick={handleDec}
-                            disabled={count === 0}
+                            disabled={count === 1}
                     >-</Button>
 
                     <Typography variant="body1" sx={{m: "auto"}}>{count}</Typography>
@@ -72,7 +72,7 @@ function ItemCount({product}) {
                     >+</Button>
                 </Stack>
 
-                <Tooltip title="Para agregar al carrito debe sumar más de un producto" arrow
+                <Tooltip title="Para agregar al carrito debe sumar al menos un producto" arrow
                          disableHoverListener={count !== 0}>
                     <span>
                     <Button
@@ -88,6 +88,7 @@ function ItemCount({product}) {
                         }}
                         aria-label="add to cart" variant="contained"
                         disabled={count === 0}
+                        onClick={handleClick}
                         endIcon={
                             <AddShoppingCartIcon style={{color: count === 0 ? "#989898" : "white"}}/>
                         }>
