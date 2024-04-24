@@ -25,9 +25,13 @@ Visualización del proyecto:
 
 ![img_2.png](img_2.png)
 
+#### GIF: Navegacion por el sitio web
+
+![navegacion](https://github.com/martiigarcia/CreaTuLanding-Garcia/assets/82916231/92739cf8-ce85-4015-b26a-40edcf975543)
 ---------------------------------------------
 
 # Para ejecutar este proyecto
+
 
 1. Descargar o clonar el proyecto
 2. En la carpeta raíz, ejecutar el siguiente comando para instalar las dependencias necesarias:
