@@ -28,14 +28,21 @@ function ItemCount({product}) {
             html: text,
             icon: "success",
         }).then(() => {
-           console.log("Exito...")
+            console.log("Exito...")
         })
     }
 
 
     return (
         <>
-            <Box sx={{flexGrow: 1, mt: 5, alignItems: "center", alignContent: "center"}}>
+            <Box
+                sx={{
+                    flexGrow: 1,
+                    // mt: 5,
+                    alignItems: "center",
+                    alignContent: "center"
+                }}
+            >
                 <Typography variant="body1" sx={{mb: 1}}>Stock actual: {product.stock}</Typography>
                 <Stack direction="row"
                        justifyContent="center"

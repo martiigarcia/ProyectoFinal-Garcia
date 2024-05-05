@@ -1,5 +1,5 @@
 import * as React from 'react';
-import LogoDrink from '/Users/archivos/uni/cursoReact/primerEntrega/createMyLanding/public/logoDrink.png'
+import LogoDrink from '/logoDrink.png'
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -9,12 +9,14 @@ import {styled} from '@mui/material/styles';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
-import {ThemeProvider} from "@mui/material";
+import {IconButton, ThemeProvider} from "@mui/material";
 import {createTheme} from "@mui/material/styles";
 import CartWidget from "../CartWidget/CartWidget.jsx";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore.js";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess.js";
 import {Link} from "react-router-dom";
+import MenuIcon from '@mui/icons-material/Menu';
+import Sidebar from "../Sidebar/Sidebar.jsx";
 
 
 const StyledMenu = styled((props) => (
@@ -139,6 +141,7 @@ function BeerMenu() {
 }
 
 function NavBar() {
+
     const darkTheme = createTheme({
         palette: {
             mode: 'dark',
@@ -155,11 +158,30 @@ function NavBar() {
         },
     });
 
+    const [open, setOpen] = React.useState(false);
+
+    const handleDrawerOpen = () => {
+        setOpen(true);
+    };
+
+    const handleDrawerClose = () => {
+        setOpen(false);
+    };
+
     return (
         <ThemeProvider theme={darkTheme}>
             <Box sx={{flexGrow: 1, mb: 10, width: "100%"}}>
                 <AppBar position="fixed" color="primary" enableColorOnDark>
                     <Toolbar>
+                        <IconButton
+                            color="inherit"
+                            aria-label="open drawer"
+                            onClick={handleDrawerOpen}
+                            edge="start"
+                            sx={{mr: 2, ...(open && {display: 'none'})}}
+                        >
+                            <MenuIcon/>
+                        </IconButton>
                         <img src={LogoDrink} style={{
                             width: 50,
                             height: 60,
@@ -197,6 +219,7 @@ function NavBar() {
                     </Toolbar>
                 </AppBar>
             </Box>
+            <Sidebar open={open} onClose={handleDrawerClose}/>
 
 
         </ThemeProvider>

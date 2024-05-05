@@ -24,7 +24,6 @@ function ItemListContainer() {
         const asyncFunction = category ? getProductsByCategory : getProducts;
 
         asyncFunction(category).then(response => {
-            console.log(response)
             setProducts(response)
         }).catch(error => {
             console.error("Error: " + error)

@@ -5,6 +5,7 @@ import ItemListContainer from "./components/listComponents/ItemListContainer/Ite
 import Footer from "./components/layout/Footer/Footer.jsx";
 import ItemDetailContainer from "./components/detailComponents/ItemDetailContainer/ItemDetailContainer.jsx";
 import PageNotFound from "./components/PageNotFound/PageNotFound.jsx";
+import Cart from "./components/CartComponents/Cart.jsx";
 
 function App() {
 
@@ -16,6 +17,7 @@ function App() {
                     <Route path="/" element={<ItemListContainer/>}/>
                     <Route path="beer-type/:categoryName" element={<ItemListContainer/>}/>
                     <Route path="/item/:beerId" element={<ItemDetailContainer/>}/>
+                    <Route path="/cart" element={<Cart/>}/>
                     <Route path="*" element={<PageNotFound/>}/>
                 </Routes>
                 <Footer description={"Trabajo realizado por Martina García"} title={"Brewland Oasis"}/>

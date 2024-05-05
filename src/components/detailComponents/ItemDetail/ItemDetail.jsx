@@ -129,7 +129,7 @@ export default function ItemDetail({product}) {
                                     direction="row"
                                     justifyContent="center"
                                     alignItems="flex-end"
-                                    // sx={{mt: 5}}
+                                    sx={{mt: 5}}
                                 >
                                     <ItemCount product={product}/>
                                 </Grid>
