@@ -5,6 +5,15 @@ import CardHeader from "@mui/material/CardHeader";
 import CartItemList from "./CartItemList.jsx";
 
 function Cart() {
+
+    const handleClean = () => {
+        console.log("CLEANING ...")
+    }
+
+    const handleBuy = () => {
+        console.log("BUYING ...")
+    }
+
     return (
         <>
             <Container>
@@ -89,7 +98,9 @@ function Cart() {
                                                     ml: 2, mr: 2,
                                                     mt: 2,
                                                     mb: 2,
-                                                   }}>
+                                                    maxHeight: '300px', // Altura máxima para el contenedor
+                                                    overflowY: 'auto', // Añade desplazamiento vertical cuando sea necesario
+                                                }}>
                                                 <CardHeader
                                                     title="Productos"
                                                     subheader="Información de productos seleccionados"
@@ -113,7 +124,21 @@ function Cart() {
                                                             backgroundColor: "#AF44CC"
                                                         },
                                                     }}
-                                                    onClick={console.log("Se realizara la compra")}
+                                                    onClick={handleClean}
+                                            >
+                                                Vaciar carrito
+                                            </Button>
+                                            <Button variant="outlined"
+                                                    sx={{
+                                                        borderColor: '#AF44CC',
+                                                        color: '#AF44CC',
+                                                        '&:hover': {
+                                                            color: 'white',
+                                                            borderColor: '#AF44CC',
+                                                            backgroundColor: "#AF44CC"
+                                                        },
+                                                    }}
+                                                    onClick={handleBuy}
                                             >
                                                 Realizar compra
                                             </Button>

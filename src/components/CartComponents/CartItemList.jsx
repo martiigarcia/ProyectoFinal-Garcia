@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {getProducts, getProductsByCategory} from "../../data/asyncMock.jsx";
 import CartItem from "./CartItem.jsx";
+import {Box} from "@mui/material";
 
 function CartItemList() {
     const [products, setProducts] = useState([]);
@@ -20,7 +21,9 @@ function CartItemList() {
     return (
         <>
             {products.map((product) => (
-                <CartItem product={product}/>
+                <Box key={product.id}>
+                    <CartItem product={product}/>
+                </Box>
             ))}
         </>
     );

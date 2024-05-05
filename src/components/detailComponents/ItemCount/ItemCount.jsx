@@ -4,21 +4,13 @@ import {Box, Stack, Tooltip, tooltipClasses, Typography} from "@mui/material";
 import Button from "@mui/material/Button";
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import useCounter from "../../../hooks/useCounter.jsx";
 
 const MySwal = withReactContent(Swal)
 
 function ItemCount({product}) {
-    const [count, setCount] = useState(1);
 
-    const handleInc = () => {
-        if (product.stock > count)
-            setCount(count + 1)
-    }
-    const handleDec = () => {
-        if (count > 1) {
-            setCount(count - 1)
-        }
-    }
+    const { count, increment, decrement } = useCounter(1, product.stock);
 
     const handleClick = () => {
         const text = `Se han agregado ${count} productos al carrito exitosamente.`;
@@ -58,7 +50,7 @@ function ItemCount({product}) {
                                     backgroundColor: "#AF44CC"
                                 },
                             }}
-                            onClick={handleDec}
+                            onClick={decrement}
                             disabled={count === 1}
                     >-</Button>
 
@@ -74,7 +66,7 @@ function ItemCount({product}) {
                                     backgroundColor: "#AF44CC"
                                 },
                             }}
-                            onClick={handleInc}
+                            onClick={increment}
                             disabled={count === product.stock}
                     >+</Button>
                 </Stack>

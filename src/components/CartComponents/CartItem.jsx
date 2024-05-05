@@ -12,7 +12,9 @@ import {
 } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {styled} from "@mui/material/styles";
+import useCounter from "../../hooks/useCounter.jsx";
 
 const LightTooltip = styled(({className, ...props}) => (
     <Tooltip {...props} classes={{popper: className}}/>
@@ -29,20 +31,12 @@ const LightTooltip = styled(({className, ...props}) => (
 }));
 
 function CartItem({product}) {
-    const [count, setCount] = useState(1);
 
-    const handleInc = () => {
-        if (product.stock > count)
-            setCount(count + 1)
-    }
-    const handleDec = () => {
-        if (count > 1) {
-            setCount(count - 1)
-        }
-    }
+    const {count, increment, decrement, remove} = useCounter(1, product.stock);
+
     return (
         <>
-            <Card variant={"outlined"}>
+            <Card variant={"outlined"} sx={{m: 1}}>
                 <Grid item xs={12} sm={12} md={12}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6} md={8}>
@@ -62,7 +56,9 @@ function CartItem({product}) {
                                        alignItems="center"
                                        spacing={3}>
 
-                                    <LightTooltip title="Remover del carrito" arrow>
+                                    {/*Boton de remover del carrito*/}
+                                    <LightTooltip title={count > 1 ? "Eliminar un elemento" : "Remover del carrito"}
+                                                  arrow>
                                         <IconButton
                                             sx={{
                                                 borderColor: '#AF44CC',
@@ -73,16 +69,18 @@ function CartItem({product}) {
                                                     backgroundColor: "#AF44CC",
                                                 },
                                             }}
-                                            onClick={handleDec}
-                                            disabled={count === 1}
+                                            onClick={count > 1 ? decrement : remove}
+                                            disabled={count <= 0}
                                         >
-                                            <RemoveIcon/>
+                                            {count <= 1 ?
+                                                <DeleteOutlineIcon/> : <RemoveIcon/>}
                                         </IconButton>
                                     </LightTooltip>
 
                                     <Typography variant="body1" sx={{m: "auto"}}>{count}</Typography>
 
-                                    <LightTooltip title="Sumar al carrito" arrow>
+                                    {/*Boton de agregar al carrito*/}
+                                    <LightTooltip title="Sumar un elemento" arrow>
                                         <IconButton
                                             sx={{
                                                 borderColor: '#AF44CC',
@@ -93,7 +91,7 @@ function CartItem({product}) {
                                                     backgroundColor: "#AF44CC"
                                                 },
                                             }}
-                                            onClick={handleInc}
+                                            onClick={increment}
                                             disabled={count === product.stock}
                                         >
                                             <AddIcon/>
