@@ -1,18 +1,21 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Alert, Box, Button, Card, CardContent, Container, Divider, Grid} from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import CardHeader from "@mui/material/CardHeader";
-import CartItemList from "./CartItemList.jsx";
+import CartItemList from "../CartItemList/CartItemList.jsx";
+import Context from "../../../context/CartContext.jsx";
+import {Link} from "react-router-dom";
 
 function Cart() {
+    // const {cart, getTotal, removeItem, clearCart} = useContext(Context);
 
     const handleClean = () => {
         console.log("CLEANING ...")
     }
 
-    const handleBuy = () => {
-        console.log("BUYING ...")
-    }
+    // const handleBuy = () => {
+    //     console.log("BUYING ...")
+    // }
 
     return (
         <>
@@ -128,20 +131,21 @@ function Cart() {
                                             >
                                                 Vaciar carrito
                                             </Button>
-                                            <Button variant="outlined"
-                                                    sx={{
-                                                        borderColor: '#AF44CC',
-                                                        color: '#AF44CC',
-                                                        '&:hover': {
-                                                            color: 'white',
+                                            <Link to={"/checkout"}>
+                                                <Button variant="outlined"
+                                                        sx={{
                                                             borderColor: '#AF44CC',
-                                                            backgroundColor: "#AF44CC"
-                                                        },
-                                                    }}
-                                                    onClick={handleBuy}
-                                            >
-                                                Realizar compra
-                                            </Button>
+                                                            color: '#AF44CC',
+                                                            '&:hover': {
+                                                                color: 'white',
+                                                                borderColor: '#AF44CC',
+                                                                backgroundColor: "#AF44CC"
+                                                            },
+                                                        }}
+                                                >
+                                                    Realizar compra
+                                                </Button>
+                                            </Link>
                                         </Grid>
                                     </Grid>
                                 </Card>

@@ -14,7 +14,7 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {styled} from "@mui/material/styles";
-import useCounter from "../../hooks/useCounter.jsx";
+import useCounter from "../../../hooks/useCounter.jsx";
 
 const LightTooltip = styled(({className, ...props}) => (
     <Tooltip {...props} classes={{popper: className}}/>

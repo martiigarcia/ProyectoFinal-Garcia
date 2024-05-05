@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {getProducts, getProductsByCategory} from "../../data/asyncMock.jsx";
-import CartItem from "./CartItem.jsx";
+import {getProducts, getProductsByCategory} from "../../../data/asyncMock.jsx";
+import CartItem from "../CartItem/CartItem.jsx";
 import {Box} from "@mui/material";
 
 function CartItemList() {
