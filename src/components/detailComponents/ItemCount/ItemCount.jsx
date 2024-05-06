@@ -1,29 +1,14 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart.js";
-import {Box, Stack, Tooltip, tooltipClasses, Typography} from "@mui/material";
+import {Box, Stack, Tooltip, Typography} from "@mui/material";
 import Button from "@mui/material/Button";
-import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
 import useCounter from "../../../hooks/useCounter.jsx";
 
-const MySwal = withReactContent(Swal)
 
-function ItemCount({product}) {
 
-    const { count, increment, decrement } = useCounter(1, product.stock);
+function ItemCount({stock, quantity, addProduct}) {
 
-    const handleClick = () => {
-        const text = `Se han agregado ${count} productos al carrito exitosamente.`;
-
-        MySwal.fire({
-            title: <p>¡Éxito!</p>,
-            html: text,
-            icon: "success",
-        }).then(() => {
-            console.log("Exito...")
-        })
-    }
-
+    const {count, increment, decrement} = useCounter(quantity, stock);
 
     return (
         <>
@@ -35,7 +20,7 @@ function ItemCount({product}) {
                     alignContent: "center"
                 }}
             >
-                <Typography variant="body1" sx={{mb: 1}}>Stock actual: {product.stock}</Typography>
+                <Typography variant="body1" sx={{mb: 1}}>Stock actual: {stock}</Typography>
                 <Stack direction="row"
                        justifyContent="center"
                        alignItems="center"
@@ -67,7 +52,7 @@ function ItemCount({product}) {
                                 },
                             }}
                             onClick={increment}
-                            disabled={count === product.stock}
+                            disabled={count === stock}
                     >+</Button>
                 </Stack>
 
@@ -87,7 +72,7 @@ function ItemCount({product}) {
                         }}
                         aria-label="add to cart" variant="contained"
                         disabled={count === 0}
-                        onClick={handleClick}
+                        onClick={() => addProduct(count)}
                         endIcon={
                             <AddShoppingCartIcon style={{color: count === 0 ? "#989898" : "white"}}/>
                         }>

@@ -1,38 +1,61 @@
-import * as React from 'react';
-import {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from 'react';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
-import {amber, blue, grey, orange, red} from '@mui/material/colors';
-import {Box, Grid} from "@mui/material";
+import {amber, grey, orange, red} from '@mui/material/colors';
+import {Box, Button, Grid} from "@mui/material";
 import Divider from "@mui/material/Divider";
 import ItemCount from "../ItemCount/ItemCount.jsx";
+import withReactContent from "sweetalert2-react-content";
+import Swal from "sweetalert2";
+import Context from "../../../context/CartContext.jsx";
+import {Link} from "react-router-dom";
 
 const categoryColorMap = {
-    "Rubia": { category: "R", color: amber[500] },
-    "Roja": { category: "R", color: red[500] },
-    "Negra": { category: "N", color: grey[900] },
-    "IPA": { category: "I", color: orange[500] },
+    "Rubia": {category: "R", color: amber[500]},
+    "Roja": {category: "R", color: red[500]},
+    "Negra": {category: "N", color: grey[900]},
+    "IPA": {category: "I", color: orange[500]},
 };
+const MySwal = withReactContent(Swal)
 
 export default function ItemDetail({product}) {
-    const [expanded, setExpanded] = React.useState(false);
     const [category, setCategory] = useState(null)
     const [color, setColor] = useState(null)
+    const [quantity, setQuantity] = useState(0)
+    const {addItem} = useContext(Context);
+
+
+    const handleAddProduct = (quantity) => {
+        const item = {
+            id: product.id,
+            name: product.name,
+            priceperpinta: product.priceperpinta,
+            stock: product.stock
+        }
+        setQuantity(quantity)
+        addItem(item, quantity)
+
+        const text = `Se han agregado ${quantity} productos al carrito exitosamente.`;
+
+        MySwal.fire({
+            title: <p>¡Éxito!</p>,
+            html: text,
+            icon: "success",
+        }).then(() => {
+            console.log("Exito...")
+        })
+    }
 
     useEffect(() => {
-        const { category, color } = categoryColorMap[product.type] || {};
+        const {category, color} = categoryColorMap[product.type] || {};
         if (category && color) {
             setCategory(category);
             setColor(color);
         }
     }, [product]);
-
-    const handleExpandClick = () => {
-        setExpanded(!expanded);
-    };
 
     return (
         <>
@@ -124,15 +147,71 @@ export default function ItemDetail({product}) {
                                 </Grid>
 
                                 {/*Botones: */}
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justifyContent="center"
-                                    alignItems="flex-end"
-                                    sx={{mt: 5}}
-                                >
-                                    <ItemCount product={product}/>
-                                </Grid>
+
+                                {quantity > 0 ? (
+                                    <>
+                                        <Grid
+                                            container
+                                            direction="column"
+                                            justifyContent="space-evenly"
+                                            alignItems="center"
+                                            sx={{mt: 5}}
+                                        >
+                                            <Link to={"/cart"}>
+                                                <Button
+                                                    sx={{
+                                                        mt: 2,
+                                                        mb: 2,
+                                                        borderColor: '#AF44CC',
+                                                        color: '#AF44CC',
+                                                        '&:hover': {
+                                                            color: 'white',
+                                                            borderColor: '#AF44CC',
+                                                            backgroundColor: "#AF44CC"
+                                                        },
+                                                    }}
+                                                    aria-label="go to cart"
+                                                >
+                                                    Ir al carrito
+                                                </Button>
+                                            </Link>
+                                            <Link to={"/"}>
+                                                <Button
+                                                    sx={{
+                                                        mt: 2,
+                                                        mb: 2,
+                                                        borderColor: '#AF44CC',
+                                                        color: '#AF44CC',
+                                                        '&:hover': {
+                                                            color: 'white',
+                                                            borderColor: '#AF44CC',
+                                                            backgroundColor: "#AF44CC"
+                                                        },
+                                                    }}
+                                                    aria-label="keep buying"
+                                                >
+                                                    Seguir comprando
+                                                </Button>
+                                            </Link>
+                                        </Grid>
+                                    </>
+                                ) : (
+                                    <><Grid
+                                        container
+                                        direction="row"
+                                        justifyContent="center"
+                                        alignItems="flex-end"
+                                        sx={{mt: 5}}
+                                    >
+                                        <ItemCount
+                                            stock={product.stock}
+                                            quantity={1}
+                                            addProduct={handleAddProduct}
+                                        />
+                                    </Grid>
+
+                                    </>
+                                )}
                             </Grid>
                         </Grid>
                     </Grid>
