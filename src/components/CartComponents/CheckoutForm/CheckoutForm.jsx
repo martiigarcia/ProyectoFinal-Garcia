@@ -11,12 +11,7 @@ const ariaLabel = {'aria-label': 'description'};
 
 function CheckoutForm() {
 
-    const [showPassword, setShowPassword] = React.useState(false);
 
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
-    const handleMouseDownPassword = (event) => {
-        event.preventDefault();
-    };
     return (
         <>
             <Container>

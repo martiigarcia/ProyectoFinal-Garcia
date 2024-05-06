@@ -344,7 +344,7 @@ export const getProducts = () => {
                 return 0;
             });
             resolve(sortedProducts);
-        }, 1000);
+        }, 2000);
     });
 };
 
@@ -355,7 +355,7 @@ export const getProductsByCategory = (category) => {
         );
         setTimeout(() => {
             resolve(filterProducts);
-        }, 1000);
+        }, 2000);
     });
 };
 
@@ -366,6 +366,6 @@ export const getProductById = (id) => {
         );
         setTimeout(() => {
             resolve(filterProducts);
-        }, 1000);
+        }, 2000);
     });
 };

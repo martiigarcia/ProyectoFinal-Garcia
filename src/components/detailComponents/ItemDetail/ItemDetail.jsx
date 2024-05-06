@@ -33,7 +33,8 @@ export default function ItemDetail({product}) {
             id: product.id,
             name: product.name,
             priceperpinta: product.priceperpinta,
-            stock: product.stock
+            stock: product.stock,
+            image: product.image,
         }
         setQuantity(quantity)
         addItem(item, quantity)

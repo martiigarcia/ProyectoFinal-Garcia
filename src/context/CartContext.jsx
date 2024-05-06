@@ -1,26 +1,25 @@
-import React, { createContext, useState } from 'react'
+import React, {createContext, useState} from 'react'
 
 const Context = createContext();
 
 
-
-export const ContextProvider = ({ children }) => {
-    const [ cart, setCart ] = useState([])
+export const ContextProvider = ({children}) => {
+    const [cart, setCart] = useState([])
 
     const addItem = (productToAdd, quantity) => {
         const newProduct = {
             ...productToAdd,
             quantity
         }
-        if(isInCart(newProduct.id)) {
+        if (isInCart(newProduct.id)) {
             const updatedCart = cart.map((el) => {
-                if(el.id === newProduct.id) {
-                    return { ...el, quantity: el.quantity + newProduct.quantity}
+                if (el.id === newProduct.id) {
+                    return {...el, quantity: el.quantity + newProduct.quantity}
                 }
                 return el
             })
             setCart(updatedCart)
-        }else{
+        } else {
             setCart([...cart, newProduct])
         }
     }
@@ -33,7 +32,7 @@ export const ContextProvider = ({ children }) => {
         setCart([...deleteItem])
     }
     const getTotal = () => {
-        const total = cart.reduce((acc, item) => acc + item.precio * item.quantity, 0)
+        const total = cart.reduce((acc, item) => acc + item.priceperpinta * item.quantity, 0)
         // 0 + 1300 * 1
         // 13000 + 8500 * 1
         // 21500 + 8900 * 1
@@ -42,6 +41,7 @@ export const ContextProvider = ({ children }) => {
     }
 
     const clearCart = () => {
+        console.info("ENTRA AL CLEAN")
         setCart([])
     }
 
@@ -54,7 +54,7 @@ export const ContextProvider = ({ children }) => {
             // 6 + 1
             // 7
         })
-        return total
+        return total;
     }
 
     return (

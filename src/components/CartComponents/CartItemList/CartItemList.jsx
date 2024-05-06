@@ -3,18 +3,9 @@ import {getProducts, getProductsByCategory} from "../../../data/asyncMock.jsx";
 import CartItem from "../CartItem/CartItem.jsx";
 import {Box} from "@mui/material";
 
-function CartItemList() {
-    const [products, setProducts] = useState([]);
+function CartItemList({products}) {
 
     useEffect(() => {
-
-        const asyncFunction = getProductsByCategory;
-
-        asyncFunction("Rubia").then(response => {
-            setProducts(response)
-        }).catch(error => {
-            console.error("Error: " + error)
-        })
 
     }, []);
 

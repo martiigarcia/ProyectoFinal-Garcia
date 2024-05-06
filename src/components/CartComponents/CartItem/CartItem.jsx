@@ -77,7 +77,7 @@ function CartItem({product}) {
                                         </IconButton>
                                     </LightTooltip>
 
-                                    <Typography variant="body1" sx={{m: "auto"}}>{count}</Typography>
+                                    <Typography variant="body1" sx={{m: "auto"}}>{product.quantity}</Typography>
 
                                     {/*Boton de agregar al carrito*/}
                                     <LightTooltip title="Sumar un elemento" arrow>
