@@ -5,10 +5,9 @@ import Button from "@mui/material/Button";
 import useCounter from "../../../hooks/useCounter.jsx";
 
 
-
 function ItemCount({stock, quantity, addProduct}) {
 
-    const {count, increment, decrement} = useCounter(quantity, stock);
+    const {count, increment, decrement} = useCounter(quantity, quantity, stock);
 
     return (
         <>

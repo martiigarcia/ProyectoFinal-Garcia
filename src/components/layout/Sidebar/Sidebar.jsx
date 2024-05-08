@@ -112,8 +112,8 @@ function Sidebar({isOpen, toggleDrawer}) {
                     <Collapse in={openList} timeout="auto" unmountOnExit>
                         <List component="div" disablePadding>
 
-                            {categoryRoadMap.map((category) => (
-                                <Link to={category.link} underline="none">
+                            {categoryRoadMap.map((category, index) => (
+                                <Link to={category.link} underline="none" key={index}>
                                     <ListItemButton onClick={handleDrawerClose} sx={{pl: 4}}>
                                         <ListItemIcon>
                                             <ArrowRightIcon/>

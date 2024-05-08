@@ -7,41 +7,54 @@ export const ContextProvider = ({children}) => {
     const [cart, setCart] = useState([])
 
     const addItem = (productToAdd, quantity) => {
-        const newProduct = {
-            ...productToAdd,
-            quantity
-        }
-        if (isInCart(newProduct.id)) {
-            const updatedCart = cart.map((el) => {
-                if (el.id === newProduct.id) {
-                    return {...el, quantity: el.quantity + newProduct.quantity}
+
+        if (isInCart(productToAdd.id)) {
+            const updatedCart = cart.map((product) => {
+                if (product.id === productToAdd.id) {
+                    return {...product, quantity: quantity}
                 }
-                return el
+                return product
             })
             setCart(updatedCart)
         } else {
+            const newProduct = {
+                ...productToAdd,
+                quantity
+            }
             setCart([...cart, newProduct])
         }
     }
+
     const isInCart = (id) => {
         return cart.some((prod) => prod.id === id)
     }
 
+
     const removeItem = (id) => {
-        const deleteItem = cart.filter((prod) => prod.id !== id)
-        setCart([...deleteItem])
+
+        const updatedCart = cart.map((product) => {
+            if (product.id === id) {
+                if (product.quantity === 1) {
+                    return null; // Eliminar el producto si la cantidad es igual a 1
+                } else {
+
+                    return {...product, quantity: product.quantity - 1}; // Restar uno de la cantidad si es mayor a 1
+                }
+            }
+            return product;
+        });
+
+        // Filtrar los productos nulos y actualizar el carrito
+        const filteredCart = updatedCart.filter((product) => product !== null);
+        setCart(filteredCart);
     }
+
     const getTotal = () => {
-        const total = cart.reduce((acc, item) => acc + item.priceperpinta * item.quantity, 0)
-        // 0 + 1300 * 1
-        // 13000 + 8500 * 1
-        // 21500 + 8900 * 1
-        // 30400
-        return total
+        return (cart.reduce((acc, item) => acc + item.priceperpinta * item.quantity, 0))
+
     }
 
     const clearCart = () => {
-        console.info("ENTRA AL CLEAN")
         setCart([])
     }
 
@@ -49,10 +62,6 @@ export const ContextProvider = ({children}) => {
         let total = 0
         cart.forEach((prod) => {
             total = total + prod.quantity
-            // 0 + 1
-            // 1 + 5
-            // 6 + 1
-            // 7
         })
         return total;
     }

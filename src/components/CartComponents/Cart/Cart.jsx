@@ -14,7 +14,10 @@ const MySwal = withReactContent(Swal)
 function Cart() {
     const [loading, setLoading] = useState(false);
 
-    const {cart, getTotal, removeItem, clearCart, getQuantity} = useContext(Context);
+    const {cart, getTotal, clearCart, getQuantity, addItem, removeItem} = useContext(Context);
+
+    const [total, setTotal] = useState(getTotal)
+    const [quantity, setQuantity] = useState(getQuantity)
 
     const handleClean = () => {
         clearCart();
@@ -25,6 +28,12 @@ function Cart() {
             icon: "success",
         });
     }
+
+    useEffect(() => {
+        setQuantity(getQuantity())
+        setTotal(getTotal().toFixed(2))
+    }, [{}]);
+
 
     return (
         <>
@@ -107,9 +116,9 @@ function Cart() {
                                                     <Box sx={{mt: 3}}>
 
                                                         <Typography>Importe total a pagar:
-                                                            ${getTotal().toFixed(2)}</Typography>
+                                                            ${total}</Typography>
                                                         <Typography>Cantidad total de
-                                                            productos: {getQuantity()}</Typography>
+                                                            productos: {quantity}</Typography>
 
 
                                                         {/*Boton Comprar:*/}

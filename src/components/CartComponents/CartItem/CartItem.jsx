@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
     Box,
     Card,
@@ -15,6 +15,8 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {styled} from "@mui/material/styles";
 import useCounter from "../../../hooks/useCounter.jsx";
+import Context from "../../../context/CartContext.jsx";
+
 
 const LightTooltip = styled(({className, ...props}) => (
     <Tooltip {...props} classes={{popper: className}}/>
@@ -32,7 +34,27 @@ const LightTooltip = styled(({className, ...props}) => (
 
 function CartItem({product}) {
 
-    const {count, increment, decrement, remove} = useCounter(1, product.stock);
+    const {count, increment, decrement, remove} = useCounter(1, product.quantity, product.stock);
+    const {addItem, removeItem} = useContext(Context);
+    const [subtotal, setSubtotal] = useState(product.priceperpinta)
+
+    const updateItem = () => {
+        increment()
+        addItem(product, count + 1)
+    }
+
+    const deleteItem = () => {
+        remove();
+        removeItem(product.id)
+    }
+
+    const getSubtotal = () => {
+        let subtotal = (count * product.priceperpinta).toFixed(2)
+        setSubtotal(subtotal)
+    }
+    useEffect(() => {
+        getSubtotal()
+    }, [count]);
 
     return (
         <>
@@ -69,7 +91,8 @@ function CartItem({product}) {
                                                     backgroundColor: "#AF44CC",
                                                 },
                                             }}
-                                            onClick={count > 1 ? decrement : remove}
+                                            onClick={() => deleteItem()}
+                                            // onClick={remove}
                                             disabled={count <= 0}
                                         >
                                             {count <= 1 ?
@@ -77,7 +100,7 @@ function CartItem({product}) {
                                         </IconButton>
                                     </LightTooltip>
 
-                                    <Typography variant="body1" sx={{m: "auto"}}>{product.quantity}</Typography>
+                                    <Typography variant="body1" sx={{m: "auto"}}>{count}</Typography>
 
                                     {/*Boton de agregar al carrito*/}
                                     <LightTooltip title="Sumar un elemento" arrow>
@@ -91,7 +114,7 @@ function CartItem({product}) {
                                                     backgroundColor: "#AF44CC"
                                                 },
                                             }}
-                                            onClick={increment}
+                                            onClick={() => updateItem()}
                                             disabled={count === product.stock}
                                         >
                                             <AddIcon/>
@@ -100,7 +123,7 @@ function CartItem({product}) {
                                 </Stack>
                             </Box>
 
-                            <Typography>${(product.quantity * product.priceperpinta).toFixed(2)}</Typography>
+                            <Typography>Subtotal: ${subtotal}</Typography>
                         </Grid>
 
                         <Grid item xs={12} sm={6} md={4} sx={{display: {xs: 'none', sm: 'block'}}}>

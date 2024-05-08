@@ -1,7 +1,13 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 
-const useCounter = (initialValue, stock) => {
+const useCounter = (initialValue, quantity, stock) => {
     const [count, setCount] = useState(initialValue)
+
+    useEffect(() => {
+        if (initialValue !== quantity) {
+            setCount(quantity)
+        }
+    }, []);
 
     const increment = () => {
         count < stock && setCount(count + 1)
