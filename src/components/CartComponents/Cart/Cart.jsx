@@ -6,11 +6,25 @@ import CartItemList from "../CartItemList/CartItemList.jsx";
 import Context from "../../../context/CartContext.jsx";
 import {Link} from "react-router-dom";
 import Loader from "../../Loader/Loader.jsx";
+import withReactContent from "sweetalert2-react-content";
+import Swal from "sweetalert2";
+
+const MySwal = withReactContent(Swal)
 
 function Cart() {
     const [loading, setLoading] = useState(false);
 
     const {cart, getTotal, removeItem, clearCart, getQuantity} = useContext(Context);
+
+    const handleClean = () => {
+        clearCart();
+        const text = `El carrito fue vaciado exitosamente.`;
+        MySwal.fire({
+            title: <p>¡Éxito!</p>,
+            html: text,
+            icon: "success",
+        });
+    }
 
     return (
         <>
@@ -99,7 +113,7 @@ function Cart() {
 
 
                                                         {/*Boton Comprar:*/}
-                                                        <Grid item xs={12} sm={12} md={12} sx={{mb: 2, mt:3}}
+                                                        <Grid item xs={12} sm={12} md={12} sx={{mb: 2, mt: 3}}
                                                               container
                                                               direction="column"
                                                               justifyContent="space-between"
@@ -132,7 +146,7 @@ function Cart() {
                                                                             backgroundColor: "#AF44CC"
                                                                         },
                                                                     }}
-                                                                    onClick={() => clearCart()}
+                                                                    onClick={() => handleClean()}
                                                             >
                                                                 Vaciar carrito
                                                             </Button>

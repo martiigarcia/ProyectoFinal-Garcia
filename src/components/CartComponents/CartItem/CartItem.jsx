@@ -100,6 +100,7 @@ function CartItem({product}) {
                                 </Stack>
                             </Box>
 
+                            <Typography>${(product.quantity * product.priceperpinta).toFixed(2)}</Typography>
                         </Grid>
 
                         <Grid item xs={12} sm={6} md={4} sx={{display: {xs: 'none', sm: 'block'}}}>
@@ -109,7 +110,9 @@ function CartItem({product}) {
                                 image={product.image}
                                 title="Imagen del producto"
                             />
+
                         </Grid>
+
                     </Grid>
                 </Grid>
             </Card>

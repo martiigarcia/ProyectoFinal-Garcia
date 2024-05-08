@@ -219,7 +219,7 @@ function NavBar() {
                     </Toolbar>
                 </AppBar>
             </Box>
-            <Sidebar open={open} onClose={handleDrawerClose}/>
+            <Sidebar isOpen={open} toggleDrawer={handleDrawerClose}/>
 
 
         </ThemeProvider>
