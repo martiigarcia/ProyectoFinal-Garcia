@@ -1,7 +1,0 @@
-Faltan en el proyecto:
-- Verificar eliminacion de console.logs
-- terminar el carrito (arreglar: userCounter para CartItem)
-- terminar formulario de pago y mostrar q se pagó
-- integrar firestore
-- Agregar menu lateral
-- Ver validaciones de agregar subtotal de cada producto

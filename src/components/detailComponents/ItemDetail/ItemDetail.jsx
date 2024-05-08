@@ -46,7 +46,7 @@ export default function ItemDetail({product}) {
             html: text,
             icon: "success",
         }).then(() => {
-            console.log("Exito...")
+
         })
     }
 

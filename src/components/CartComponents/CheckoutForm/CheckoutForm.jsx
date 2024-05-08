@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useContext, useState} from 'react'
 import Box from '@mui/material/Box';
 import Input from '@mui/material/Input';
 import Container from "@mui/material/Container";
@@ -6,10 +6,76 @@ import Card from "@mui/material/Card";
 import {Divider, FormControl, Grid, InputAdornment, InputLabel, TextField} from "@mui/material";
 import Button from "@mui/material/Button";
 import CardHeader from "@mui/material/CardHeader";
+import withReactContent from "sweetalert2-react-content";
+import Swal from "sweetalert2";
+import {useNavigate} from 'react-router-dom'
+import Context from "../../../context/CartContext.jsx";
 
-const ariaLabel = {'aria-label': 'description'};
+const MySwal = withReactContent(Swal)
 
 function CheckoutForm() {
+    const {cart, getTotal, clearCart} = useContext(Context)
+    const [user, setUser] = useState({
+        name: '',
+        surname: '',
+        email: '',
+        repeatedEmail: '',
+        phone: '',
+        paymentMethod: ''
+    })
+    const [order, setOrder] = useState({})
+    const [emailMatch, setEmailMatch] = useState(true)
+    const [error, setError] = useState({})
+    const navigate = useNavigate()
+
+    const updateUser = (event) => {
+        setUser((user) => ({
+            ...user,
+            [event.target.name]: event.target.value
+        }))
+    }
+
+    const validateEmails = () => {
+        if (user.email === user.repeatedEmail) {
+            setEmailMatch(true)
+        } else {
+            setEmailMatch(false)
+        }
+    }
+    const validateForm = () => {
+        const errors = {}
+        if (!user.name) {
+            errors.name = "Tenés que agregar un nombre"
+        }
+        // mínimo de caracteres para el nombre
+        // número de teléfono válido, chequear algún mínimo
+        // pueden validar directamente acá los emails
+        setError(errors)
+        return Object.keys(errors).length === 0
+    }
+
+    const buy = () => {
+
+        const order = {
+            buyer: user,
+            cart: cart,
+            total: getTotal(),
+            date: "hoy"
+        }
+
+        const text = `La compra se ha realizado exitosamente.<br/>Se registro una venta por el monto total de: $${order.total}<br/>El dia: ${order.date}`;
+
+        MySwal.fire({
+            title: <p>¡Éxito!</p>,
+            html: text,
+            icon: "success",
+        }).then(() => {
+            // clearCart()
+            navigate('/')
+        })
+
+
+    }
 
 
     return (
@@ -114,9 +180,10 @@ function CheckoutForm() {
                                                        placeholder="Agregar metodos de pago"/>
                                         </FormControl>
                                     </Grid>
-                                    <Grid item xs={12} sm={12} md={12} sx={{mt: 5, mb:2}}>
+                                    <Grid item xs={12} sm={12} md={12} sx={{mt: 5, mb: 2}}>
                                         <Divider sx={{backgroundColor: "#AF44CC"}} variant="middle"/>
                                         <Button
+                                            onClick={() => buy()}
                                             sx={{
                                                 mt: 2, mb: 2,
                                                 borderColor: '#AF44CC',
