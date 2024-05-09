@@ -4,6 +4,7 @@ import ItemList from "../ItemList/ItemList.jsx";
 import {getProducts, getProductsByCategory} from "../../../data/asyncMock.jsx";
 import {useParams} from "react-router-dom";
 import Loader from "../../Loader/Loader.jsx";
+import {db} from "../../../config/firebase.jsx"
 
 function ItemListContainer() {
     const [products, setProducts] = useState([]);
