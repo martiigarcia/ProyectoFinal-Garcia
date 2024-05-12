@@ -111,9 +111,22 @@ function CheckoutForm() {
     }
 
     const validateCard = () => {
-        //Aca deberia hacer una validacion de la tarjeta uniendo mes y año para ver que no este vencida
 
         const errorsDetected = {};
+
+        if (!card.ownerCard) {
+            errorsDetected.ownerCard = "El nombre del titulo de la tarjeta no puede ser vacio.";
+        } else {
+            if (card.ownerCard.length < 3) {
+                errorsDetected.ownerCard = "El nombre del titular debe tener al menos 3 caracteres.";
+            } else {
+                //Validacion del nombre del titular
+                const ownerRegex = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð.'-][a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð .'-]*$/;
+                if (!card.ownerCard.match(ownerRegex)) {
+                    errorsDetected.ownerCard = "Solo se pueden ingresar carateres alfabéticos.";
+                }
+            }
+        }
 
         // Validacion del numero de tarjeta
         if (!card.numberCard) {
@@ -140,7 +153,9 @@ function CheckoutForm() {
                 errorsDetected.codeCard = "El código de seguridad debe tener 3 o 4 dígitos numericos.";
             }
         }
-        setErrors(errorsDetected);
+        setErrors((prevErrors) => {
+            return Object.assign({}, prevErrors, errorsDetected);
+        });
     }
 
     const validateForm = () => {
@@ -202,7 +217,9 @@ function CheckoutForm() {
             }
         }
 
-        setErrors(errorsDetected)
+        setErrors((prevErrors) => {
+            return Object.assign({}, prevErrors, errorsDetected);
+        });
         return Object.keys(errorsDetected).length === 0
     }
 
@@ -350,7 +367,7 @@ function CheckoutForm() {
                                             mt: 2
                                         }}>
                                             <InputLabel id="select-payment-label" color="secondary"
-                                                        error={errors.payment}>
+                                                        error={!!errors.payment}>
                                                 Método de pago
                                             </InputLabel>
                                             <Select
@@ -467,7 +484,7 @@ function CheckoutForm() {
                                                                    placeholder="Lucas B. Suarez" name="ownerCard"
                                                                    type="text"
                                                                    onChange={(event) => updateCard(event)}
-                                                                   error={errors.ownerCard}
+                                                                   error={!!errors.ownerCard}
                                                                    helperText={errors.ownerCard ? errors.ownerCard : "Debe ingresar el nombre completo como aparece en la tarjeta."}
                                                         />
                                                     </FormControl>
@@ -484,7 +501,7 @@ function CheckoutForm() {
                                                                    color="secondary"
                                                                    placeholder="123" name="codeCard" type="number"
                                                                    onChange={(event) => updateCard(event)}
-                                                                   error={errors.codeCard}
+                                                                   error={!!errors.codeCard}
                                                                    helperText={errors.codeCard ? errors.codeCard : "CVV - CSC: Debe ingresar 3 o 4 digitos."}
                                                         />
                                                     </FormControl>
