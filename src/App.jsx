@@ -8,7 +8,6 @@ import PageNotFound from "./components/PageNotFound/PageNotFound.jsx";
 import Cart from "./components/CartComponents/Cart/Cart.jsx";
 import CheckoutForm from "./components/CartComponents/CheckoutForm/CheckoutForm.jsx";
 import {ContextProvider} from "./context/CartContext";
-import Loader from "./components/Loader/Loader.jsx";
 
 function App() {
 

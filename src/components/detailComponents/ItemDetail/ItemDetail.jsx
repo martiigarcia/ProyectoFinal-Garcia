@@ -21,14 +21,21 @@ const categoryColorMap = {
 };
 const MySwal = withReactContent(Swal)
 
-export default function ItemDetail({product}) {
+export default function ItemDetail({product, currentQuantity}) {
     const [category, setCategory] = useState(null)
     const [color, setColor] = useState(null)
     const [quantity, setQuantity] = useState(0)
     const {addItem} = useContext(Context);
 
 
+    // Stock (s): cantidad de stock total del producto
+    // CurrentQuantity (cq): cantidad que se agrego del producto al carrito
+    // MaxAvailable (ma): cantidad restante disponible del producto
+    // Ejemplo: si stock total es 10 (s), y agrego 4 elementos al carrito (cq). Entonces quedan disponibles 6 elementos (ma)
+    const maxAvailable = product.stock - currentQuantity;
+
     const handleAddProduct = (quantity) => {
+
         const item = {
             id: product.id,
             name: product.name,
@@ -206,7 +213,8 @@ export default function ItemDetail({product}) {
                                     >
                                         <ItemCount
                                             stock={product.stock}
-                                            quantity={1}
+                                            initialValue={1}
+                                            maxAvailable={maxAvailable}
                                             addProduct={handleAddProduct}
                                         />
                                     </Grid>

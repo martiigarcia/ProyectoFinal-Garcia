@@ -7,23 +7,22 @@ export const ContextProvider = ({children}) => {
     const [cart, setCart] = useState([])
 
     const addItem = (productToAdd, quantity) => {
-
         if (isInCart(productToAdd.id)) {
             const updatedCart = cart.map((product) => {
                 if (product.id === productToAdd.id) {
-                    return {...product, quantity: quantity}
+                    return {...product, quantity: product.quantity + quantity};
                 }
-                return product
-            })
-            setCart(updatedCart)
+                return product;
+            });
+            setCart(updatedCart);
         } else {
             const newProduct = {
                 ...productToAdd,
                 quantity
-            }
-            setCart([...cart, newProduct])
+            };
+            setCart([...cart, newProduct]);
         }
-    }
+    };
 
     const isInCart = (id) => {
         return cart.some((prod) => prod.id === id)
@@ -66,6 +65,13 @@ export const ContextProvider = ({children}) => {
         return total;
     }
 
+    const currentQuantity = (productId) => {
+        // obtenemos el producto
+        const product = cart.find((item) => item.id === productId);
+        // retornamos la cantidad de items del producto, si el producto no está en el carrito, entonces es 0
+        return product ? product.quantity : 0;
+    };
+
     return (
         <Context.Provider
             value={{
@@ -74,7 +80,8 @@ export const ContextProvider = ({children}) => {
                 removeItem,
                 getTotal,
                 clearCart,
-                getQuantity
+                getQuantity,
+                currentQuantity
             }}
         >
             {children}

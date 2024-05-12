@@ -33,14 +33,20 @@ const LightTooltip = styled(({className, ...props}) => (
 }));
 
 function CartItem({product}) {
+    const {
+        count,
+        increment,
+        remove
+    } = useCounter(
+        product.quantity,
+        product.stock);
 
-    const {count, increment, decrement, remove} = useCounter(1, product.quantity, product.stock);
     const {addItem, removeItem} = useContext(Context);
     const [subtotal, setSubtotal] = useState(product.priceperpinta)
 
     const updateItem = () => {
         increment()
-        addItem(product, count + 1)
+        addItem(product, 1)
     }
 
     const deleteItem = () => {

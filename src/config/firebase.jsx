@@ -12,7 +12,7 @@ const firebaseConfig = {
     messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGINGSENDERID,
     appId: import.meta.env.VITE_FIREBASE_APPID,
 };
-console.log("se conecta");
+// console.log("se conecta");
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -21,7 +21,7 @@ const analytics = getAnalytics(app);
 
 
 // Agregar productos a la base de datos:
-
+//
 // products.forEach((prod) => {
 //   addDoc(collection(db, "products"), prod)
 //     .then((data) => console.log(`se agregó el producto ${data.id}`))

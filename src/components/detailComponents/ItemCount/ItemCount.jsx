@@ -5,9 +5,12 @@ import Button from "@mui/material/Button";
 import useCounter from "../../../hooks/useCounter.jsx";
 
 
-function ItemCount({stock, quantity, addProduct}) {
+function ItemCount({stock, initialValue, maxAvailable, addProduct}) {
 
-    const {count, increment, decrement} = useCounter(quantity, quantity, stock);
+    // Stock (s): cantidad de stock total del producto
+    // InitialValue (iv): cantidad minima del producto (1)
+    // MaxAvailable (ma): cantidad restante disponible del producto
+    const {count, increment, decrement} = useCounter(initialValue, maxAvailable);
 
     return (
         <>
@@ -19,7 +22,7 @@ function ItemCount({stock, quantity, addProduct}) {
                     alignContent: "center"
                 }}
             >
-                <Typography variant="body1" sx={{mb: 1}}>Stock actual: {stock}</Typography>
+                <Typography variant="body1" sx={{mb: 1}}>Stock actual: {maxAvailable}</Typography>
                 <Stack direction="row"
                        justifyContent="center"
                        alignItems="center"
