@@ -22,17 +22,18 @@ const LightTooltip = styled(({className, ...props}) => (
     <Tooltip {...props} classes={{popper: className}}/>
 ))(({theme}) => ({
     [`& .${tooltipClasses.arrow}`]: {
-        color: theme.palette.common.black,
+        color: theme.palette.common.white,
     },
     [`& .${tooltipClasses.tooltip}`]: {
-        backgroundColor: theme.palette.common.black,
-        color: 'rgb(255,255,255)',
+        backgroundColor: theme.palette.common.white,
+        color: 'rgb(9,2,2)',
         boxShadow: theme.shadows[1],
         fontSize: 11,
     },
 }));
 
 function CartItem({product}) {
+
     const {
         count,
         increment,
@@ -109,7 +110,10 @@ function CartItem({product}) {
                                     <Typography variant="body1" sx={{m: "auto"}}>{count}</Typography>
 
                                     {/*Boton de agregar al carrito*/}
-                                    <LightTooltip title="Sumar un elemento" arrow>
+                                    <LightTooltip
+                                        title={count === product.stock ? "Stock máximo el producto alcanzado" : "Sumar un elemento"}
+                                        arrow>
+                                         <span>
                                         <IconButton
                                             sx={{
                                                 borderColor: '#AF44CC',
@@ -125,6 +129,7 @@ function CartItem({product}) {
                                         >
                                             <AddIcon/>
                                         </IconButton>
+                                         </span>
                                     </LightTooltip>
                                 </Stack>
                             </Box>

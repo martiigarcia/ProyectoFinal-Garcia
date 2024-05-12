@@ -10,6 +10,8 @@ import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
 import {useNavigate} from 'react-router-dom'
 import Context from "../../../context/CartContext.jsx";
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 
 const MySwal = withReactContent(Swal)
 
@@ -19,14 +21,23 @@ function CheckoutForm() {
         name: '',
         surname: '',
         email: '',
-        repeatedEmail: '',
         phone: '',
         paymentMethod: ''
     })
     const [order, setOrder] = useState({})
     const [emailMatch, setEmailMatch] = useState(true)
-    const [error, setError] = useState({})
+    const [errors, setErrors] = useState({})
     const navigate = useNavigate()
+    const [payment, setPayment] = React.useState('');
+
+    const selectPaymentMethod = (event) => {
+        setPayment(event.target.value);
+        setUser((user) => ({
+            ...user,
+            [event.target.name]: event.target.value
+        }))
+    };
+
 
     const updateUser = (event) => {
         setUser((user) => ({
@@ -35,44 +46,81 @@ function CheckoutForm() {
         }))
     }
 
-    const validateEmails = () => {
-        if (user.email === user.repeatedEmail) {
+    const validateEmail = () => {
+
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z]{2,})+$/;
+        const isValidEmail = emailRegex.test(user.email);
+        if (isValidEmail) {
             setEmailMatch(true)
+            return true
         } else {
             setEmailMatch(false)
+            return false
         }
     }
+
+
     const validateForm = () => {
-        const errors = {}
+        const errorsDetected = {}
         if (!user.name) {
-            errors.name = "Tenés que agregar un nombre"
+            errorsDetected.name = "El campo 'Nombre' es obligatorio."
+        } else {
+            // mínimo de caracteres para el nombre
         }
-        // mínimo de caracteres para el nombre
-        // número de teléfono válido, chequear algún mínimo
-        // pueden validar directamente acá los emails
-        setError(errors)
-        return Object.keys(errors).length === 0
+        if (!user.surname) {
+            errorsDetected.surname = "El campo 'Apellido' es obligatorio."
+        } else {
+            // mínimo de caracteres para el apeliido
+
+        }
+        if (!user.email) {
+            errorsDetected.email = "El campo 'Email' es obligatorio."
+        } else {
+            if (!validateEmail()) {
+                errorsDetected.email = "El campo 'Email' es incorrecto. Formato: marti@example.com."
+            }
+        }
+        if (!user.phone) {
+            errorsDetected.phone = "El campo 'Telefono' es obligatorio."
+        } else {
+            // número de teléfono válido, chequear algún mínimo
+
+        }
+        if (!user.paymentMethod) {
+            errorsDetected.payment = "El campo 'Metodo de pago' es obligatorio."
+        } else {
+            //ver si valido que sea alguna de las 4 opciones
+        }
+
+        setErrors(errorsDetected)
+        return Object.keys(errorsDetected).length === 0
     }
 
     const buy = () => {
 
-        const order = {
-            buyer: user,
-            cart: cart,
-            total: getTotal(),
-            date: "hoy"
+        //Valido el formulario para ver si prosigo en realizar la compra o muestro errores
+        if (validateForm()) {
+            const order = {
+                buyer: user,
+                cart: cart,
+                total: getTotal(),
+                date: "hoy" //hacer bien la fecha
+            }
+
+            // Restar stock de productos seleccionados (y desp ver como muestro en el inicio si alguno no tiene mas stock)
+            // Cargar orden de compra
+
+            const text = `La compra se ha realizado exitosamente.<br/>Se registro una venta por el monto total de: $${order.total}<br/>El dia: ${order.date}`;
+
+            MySwal.fire({
+                title: <p>¡Éxito!</p>,
+                html: text,
+                icon: "success",
+            }).then(() => {
+                // clearCart()
+                // navigate('/')
+            })
         }
-
-        const text = `La compra se ha realizado exitosamente.<br/>Se registro una venta por el monto total de: $${order.total}<br/>El dia: ${order.date}`;
-
-        MySwal.fire({
-            title: <p>¡Éxito!</p>,
-            html: text,
-            icon: "success",
-        }).then(() => {
-            // clearCart()
-            navigate('/')
-        })
 
 
     }
@@ -137,17 +185,23 @@ function CheckoutForm() {
                                                      }}
                                         >
                                             <TextField fullWidth variant="outlined" label="Nombre" color="secondary"
-                                                       placeholder="Martina"/>
+                                                       placeholder="Martina" name="name"
+                                                       onChange={(event) => updateUser(event)}
+                                                       error={errors.name}
+                                                       helperText={errors.name}
+                                            />
                                         </FormControl>
                                     </Grid>
-
                                     <Grid item xs={12} sm={12} md={12}>
                                         <FormControl fullWidth sx={{
                                             mb: 1,
                                             mt: 2
                                         }}>
                                             <TextField fullWidth variant="outlined" label="Apellido" color="secondary"
-                                                       placeholder="García"/>
+                                                       placeholder="García" name="surname"
+                                                       onChange={(event) => updateUser(event)}
+                                                       error={errors.surname}
+                                                       helperText={errors.surname}/>
                                         </FormControl>
                                     </Grid>
                                     <Grid item xs={12} sm={12} md={12}>
@@ -156,9 +210,14 @@ function CheckoutForm() {
                                             mt: 2
                                         }}>
                                             <TextField fullWidth variant="outlined" label="Correo" color="secondary"
-                                                       placeholder="correo@example.com"/>
+                                                       type="email"
+                                                       placeholder="correo@example.com" name="email"
+                                                       onChange={(event) => updateUser(event)}
+                                                       error={errors.email}
+                                                       helperText={errors.email}/>
                                         </FormControl>
                                     </Grid>
+
                                     <Grid item xs={12} sm={12} md={12}>
                                         <FormControl fullWidth sx={{
                                             mb: 1,
@@ -166,20 +225,43 @@ function CheckoutForm() {
                                         }} color="secondary"
                                                      variant="filled">
                                             <TextField fullWidth variant="outlined" label="Telefono" color="secondary"
-                                                       placeholder="111689854"/>
+                                                       placeholder="111689854" name="phone" type="number"
+                                                       onChange={(event) => updateUser(event)}
+                                                       error={errors.phone}
+                                                       helperText={errors.phone}/>
                                         </FormControl>
                                     </Grid>
+
+
                                     <Grid item xs={12} sm={12} md={12}>
                                         <FormControl fullWidth sx={{
                                             mb: 1,
                                             mt: 2
-                                        }} color="secondary"
-                                                     variant="filled">
-                                            <TextField fullWidth variant="outlined" label="Metodo de pago"
-                                                       color="secondary"
-                                                       placeholder="Agregar metodos de pago"/>
+                                        }}>
+                                            <InputLabel id="select-payment-label" color="secondary"
+                                                        error={errors.payment}>
+                                                Método de pago
+                                            </InputLabel>
+                                            <Select
+                                                labelId="select-payment"
+                                                id="select-payment"
+                                                value={payment}
+                                                label="Metodo de pago"
+                                                onChange={selectPaymentMethod}
+                                                color="secondary"
+                                                name="paymentMethod"
+                                                error={errors.payment}
+                                                helperText={errors.payment}
+                                            >
+                                                <MenuItem value="creditCard">Tarjeta de crédito</MenuItem>
+                                                <MenuItem value="debitCard">Tarjeta de débito</MenuItem>
+                                                <MenuItem value="cash">Efectivo o Transferecia</MenuItem>
+                                                <MenuItem value="other">Arreglar con el vendedor</MenuItem>
+                                            </Select>
                                         </FormControl>
                                     </Grid>
+
+
                                     <Grid item xs={12} sm={12} md={12} sx={{mt: 5, mb: 2}}>
                                         <Divider sx={{backgroundColor: "#AF44CC"}} variant="middle"/>
                                         <Button
