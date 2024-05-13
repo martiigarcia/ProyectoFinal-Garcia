@@ -1,9 +1,8 @@
 import React, {useContext, useState} from 'react'
 import Box from '@mui/material/Box';
-import Input from '@mui/material/Input';
 import Container from "@mui/material/Container";
 import Card from "@mui/material/Card";
-import {Collapse, Divider, FormControl, Grid, InputAdornment, InputLabel, TextField} from "@mui/material";
+import {Collapse, Divider, FormControl, Grid, InputLabel, TextField} from "@mui/material";
 import Button from "@mui/material/Button";
 import CardHeader from "@mui/material/CardHeader";
 import withReactContent from "sweetalert2-react-content";
@@ -14,6 +13,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Typography from "@mui/material/Typography";
 import CardContent from "@mui/material/CardContent";
+import {Timestamp, addDoc, collection, doc, getDoc, updateDoc} from 'firebase/firestore'
+import {db} from "../../../config/firebase.jsx";
 
 const MySwal = withReactContent(Swal)
 
@@ -105,8 +106,10 @@ function CheckoutForm() {
 
         if (expirationDate <= currentDate) {
             setExpiredDate(true)
+            return true
         } else {
             setExpiredDate(false)
+            return false
         }
     }
 
@@ -156,6 +159,7 @@ function CheckoutForm() {
         setErrors((prevErrors) => {
             return Object.assign({}, prevErrors, errorsDetected);
         });
+        return Object.keys(errorsDetected).length === 0
     }
 
     const validateForm = () => {
@@ -223,34 +227,72 @@ function CheckoutForm() {
         return Object.keys(errorsDetected).length === 0
     }
 
-    const buy = () => {
+    const buy = async () => {
 
-        //Valido el formulario para ver si prosigo en realizar la compra o muestro errores
+        const loadingSwal = Swal.fire({
+            title: "Estado de compra: En proceso...",
+            html: "La orden de compra fue confirmada.",
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        //Con validateForm ya valido t0dos los campos ya que al final se cuentan tod0s los campos de error detectados
         if (validateForm()) {
-            const order = {
-                buyer: user, //usuario comprador
-                card: (user.paymentMethod === "creditCard" || user.paymentMethod === "debitCard") ? card : null, // card es opcional si el metodo de pago es de tarjeta de credito o debito
-                cart: cart, //carrito
-                total: getTotal(), //total del carrito
-                date: new Date() // Fecha actual
-            };
 
-            // Restar stock de productos seleccionados (y desp ver como muestro en el inicio si alguno no tiene mas stock)
-            // Cargar orden de compra
+            const ordersCollection = collection(db, 'purchaseOrders')
 
-            const text = `La compra se ha realizado exitosamente.<br/>Se registro una venta por el monto total de: $${order.total}<br/>El dia: ${order.date}`;
+            try {
+                const order = {
+                    buyer: user, //usuario comprador
+                    card: (user.paymentMethod === "creditCard" || user.paymentMethod === "debitCard") ? card : null, // card es opcional si el metodo de pago es de tarjeta de credito o debito
+                    cart: cart, //carrito
+                    total: getTotal(), //total del carrito
+                    date: Timestamp.now(),  // Fecha actual
+                    status: "COMPLETA"
+                };
 
-            MySwal.fire({
-                title: <p>¡Éxito!</p>,
-                html: text,
-                icon: "success",
-            }).then(() => {
-                // clearCart()
-                // navigate('/')
-            })
+
+                for (const item of cart) {
+                    const productRef = doc(db, 'products', item.id)
+                    const productDoc = await getDoc(productRef)
+                    const currentStock = productDoc.data().stock
+                    await updateDoc(productRef, {
+                        stock: currentStock - item.quantity
+                    })
+
+                }
+
+                const orderDocRef = await addDoc(ordersCollection, order)
+
+
+                // Cerrar SweetAlert de carga
+                loadingSwal.close();
+
+                const text = `La compra se ha realizado exitosamente!
+                        <br/>El dia: ${order.date.toDate().toLocaleDateString('es-ES')}
+                         <br/>Código de compra: ${orderDocRef.id}`
+                ;
+
+                MySwal.fire({
+                    title: <p>¡Éxito!</p>,
+                    html: text,
+                    icon: "success",
+                }).then(() => {
+                    clearCart()
+                    navigate('/')
+                })
+
+            } catch (error) {
+                loadingSwal.close();
+
+                await MySwal.fire({
+                    title: <p>Error</p>,
+                    text: "Algo salio mal... " + error.message,
+                    icon: "error",
+                })
+            }
         }
-
-
     }
 
 
