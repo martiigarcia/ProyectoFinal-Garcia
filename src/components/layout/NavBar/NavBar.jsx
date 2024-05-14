@@ -9,7 +9,7 @@ import {styled} from '@mui/material/styles';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
-import {IconButton, ThemeProvider} from "@mui/material";
+import {Grid, IconButton, ThemeProvider} from "@mui/material";
 import {createTheme} from "@mui/material/styles";
 import CartWidget from "../CartWidget/CartWidget.jsx";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore.js";
@@ -170,7 +170,7 @@ function NavBar() {
 
     return (
         <ThemeProvider theme={darkTheme}>
-            <Box sx={{flexGrow: 1, mb: 10, width: "100%"}}>
+            <Box sx={{flexGrow: 1, mb: 10, width: "100%", flexWrap: 'wrap'}}>
                 <AppBar position="fixed" color="primary" enableColorOnDark>
                     <Toolbar>
                         <IconButton
@@ -182,40 +182,117 @@ function NavBar() {
                         >
                             <MenuIcon/>
                         </IconButton>
-                        <img src={LogoDrink} style={{
-                            width: 50,
-                            height: 60,
-                            mr: 2,
-                            ml: 2,
-                            mt: 2,
-                            mb: 5,
-                        }}/>
-                        <Link to="/" underline="none">
-                            <Typography
-                                className="title"
-                                variant="h6"
-                                sx={{
-                                    mr: 2,
-                                    display: 'flex',
-                                    fontFamily: 'monospace',
-                                    fontWeight: 700,
-                                    color: 'secondary.main',
-                                    textDecoration: 'none',
-                                    textShadow: '1px 1px 20px rgba(255, 255, 255, 1)',
-                                }}
-                            >
-                                Brewland Oasis
-                            </Typography>
-                        </Link>
-                        <Divider orientation="vertical" flexItem variant="middle"/>
-                        <Box sx={{flexGrow: 1, display: 'flex', ml: 5}}>
-                            <BeerMenu/>
-                        </Box>
-                        <Box sx={{display: 'flex', alignItems: 'center'}}>
-                            <Link to="cart" underline="none">
-                                <CartWidget/>
+
+                        <Box sx={{
+                            display: "flex",
+                            alignItems: "center",
+                        }}>
+                            <img src={LogoDrink} style={{
+                                width: 50,
+                                height: 60,
+                                mr: 2,
+                                ml: 2,
+                                mt: 2,
+                                mb: 5,
+                            }}/>
+                            <Link to="/" underline="none">
+                                <Typography
+                                    className="title"
+                                    variant="h6"
+                                    sx={{
+                                        mr: 2,
+                                        display: 'flex',
+                                        fontFamily: 'monospace',
+                                        fontWeight: 700,
+                                        color: 'secondary.main',
+                                        textDecoration: 'none',
+                                        textShadow: '1px 1px 20px rgba(255, 255, 255, 1)',
+                                    }}
+                                >
+                                    Brewland Oasis
+                                </Typography>
                             </Link>
                         </Box>
+
+                        <Divider orientation="vertical" flexItem variant="middle"
+                                 sx={{display: {xs: 'none', md: 'flex'}}}/>
+                        <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}, ml: 5}}>
+                            <BeerMenu/>
+                        </Box>
+
+                        <Box sx={{
+                            display: {xs: 'none', md: 'flex'},
+                            alignItems: 'center',
+                            justifyContent: "flex-end"
+                        }}>
+                            <Link to="cart" underline="none">
+                                <CartWidget fontSize={40} color={"white"}/>
+                            </Link>
+                        </Box>
+
+                        {/*<Grid container spacing={2}>*/}
+
+                        {/*    <Grid item xs={1} sm={1} md={1}>*/}
+                        {/*        /!*<Box sx={{display: 'flex'}}>*!/*/}
+                        {/*            <IconButton*/}
+                        {/*                color="inherit"*/}
+                        {/*                aria-label="open drawer"*/}
+                        {/*                onClick={handleDrawerOpen}*/}
+                        {/*                edge="start"*/}
+                        {/*                sx={{*/}
+
+                        {/*                    ...(open && {display: 'none'})*/}
+                        {/*                }}*/}
+                        {/*            >*/}
+                        {/*                <MenuIcon/>*/}
+                        {/*            </IconButton>*/}
+                        {/*        /!*</Box>*!/*/}
+                        {/*    </Grid>*/}
+                        {/*    <Grid item xs={10} sm={7} md={3}>*/}
+                        {/*        <Box display="flex" alignItems="center">*/}
+                        {/*            <img*/}
+                        {/*                src={LogoDrink}*/}
+                        {/*                style={{*/}
+                        {/*                    width: 50,*/}
+                        {/*                    height: 60,*/}
+                        {/*                    marginRight: 8,*/}
+                        {/*                }}*/}
+                        {/*            />*/}
+                        {/*            <Link to="/" underline="none">*/}
+                        {/*                <Typography*/}
+                        {/*                    variant="h6"*/}
+                        {/*                    sx={{*/}
+                        {/*                        display: {xs: 'none', sm: 'block'},*/}
+                        {/*                        fontFamily: 'monospace',*/}
+                        {/*                        fontWeight: 700,*/}
+                        {/*                        color: 'secondary.main',*/}
+                        {/*                        textDecoration: 'none',*/}
+                        {/*                        textShadow: '1px 1px 20px rgba(255, 255, 255, 1)',*/}
+                        {/*                    }}*/}
+                        {/*                >*/}
+                        {/*                    Brewland Oasis*/}
+                        {/*                </Typography>*/}
+                        {/*            </Link>*/}
+                        {/*        </Box>*/}
+                        {/*    </Grid>*/}
+
+                        {/*    <Grid item xs={false} sm={false} md={4}*/}
+                        {/*          sx={{display: {xs: 'none', md: 'flex'}, justifyContent: 'center'}}>*/}
+                        {/*        <Divider orientation="vertical" flexItem variant="middle"/>*/}
+                        {/*        <Box sx={{flexGrow: 1, display: 'flex', ml: 5}}>*/}
+                        {/*            <BeerMenu/>*/}
+                        {/*        </Box>*/}
+                        {/*    </Grid>*/}
+                        {/*    <Grid item xs={1} sm={4} md={3} sx={{display: 'flex', justifyContent: 'flex-end'}}>*/}
+                        {/*        <Box sx={{display: 'flex', alignItems: 'center'}}>*/}
+                        {/*            <Link to="cart" underline="none">*/}
+                        {/*                <CartWidget/>*/}
+                        {/*            </Link>*/}
+                        {/*        </Box>*/}
+                        {/*    </Grid>*/}
+                        {/*</Grid>*/}
+
+
                     </Toolbar>
                 </AppBar>
             </Box>

@@ -11,7 +11,6 @@ import {
     Typography
 } from "@mui/material";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import ShoppingCart from '@mui/icons-material/ShoppingCart';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import HomeIcon from '@mui/icons-material/Home';
 import SportsBarRoundedIcon from '@mui/icons-material/SportsBarRounded';
@@ -20,6 +19,7 @@ import {styled} from "@mui/material/styles";
 import {Link} from "react-router-dom";
 import {ExpandLess, ExpandMore} from "@mui/icons-material";
 import {amber, grey, orange, red} from "@mui/material/colors";
+import CartWidget from "../CartWidget/CartWidget.jsx";
 
 const StyledDrawer = styled(Drawer)({
     '& .MuiDrawer-paper': {
@@ -91,7 +91,7 @@ function Sidebar({isOpen, toggleDrawer}) {
                     <Link to="/cart" underline="none">
                         <ListItemButton onClick={handleDrawerClose}>
                             <ListItemIcon>
-                                <ShoppingCart/>
+                                <CartWidget color={"white"}/>
                             </ListItemIcon>
                             <ListItemText primary="Carrito" sx={{color: "#FFFFFF"}}/>
                         </ListItemButton>
