@@ -13,17 +13,9 @@ import Swal from "sweetalert2";
 import Context from "../../../context/CartContext.jsx";
 import {Link} from "react-router-dom";
 
-const categoryColorMap = {
-    "Rubia": {category: "R", color: amber[500]},
-    "Roja": {category: "R", color: red[500]},
-    "Negra": {category: "N", color: grey[900]},
-    "IPA": {category: "I", color: orange[500]},
-};
 const MySwal = withReactContent(Swal)
 
 export default function ItemDetail({product, currentQuantity}) {
-    const [category, setCategory] = useState(null)
-    const [color, setColor] = useState(null)
     const [quantity, setQuantity] = useState(0)
     const {addItem} = useContext(Context);
 
@@ -57,13 +49,6 @@ export default function ItemDetail({product, currentQuantity}) {
         })
     }
 
-    useEffect(() => {
-        const {category, color} = categoryColorMap[product.type] || {};
-        if (category && color) {
-            setCategory(category);
-            setColor(color);
-        }
-    }, [product]);
 
     return (
         <>
@@ -84,17 +69,6 @@ export default function ItemDetail({product, currentQuantity}) {
                         {/*Header: */}
                         <Grid item xs={12}>
                             <CardHeader
-                                avatar={
-                                    <Avatar
-                                        sx={{
-                                            bgcolor: color,
-                                            color: color === "#212121" ? "#ffffff" : "#000000",
-                                            border: "2px solid #ffffff"
-                                        }}
-                                        aria-label="avatar">
-                                        {category}
-                                    </Avatar>
-                                }
                                 title={product.name}
                                 subheader={"Precio por pinta: $" + product.priceperpinta}
                             />
@@ -118,6 +92,16 @@ export default function ItemDetail({product, currentQuantity}) {
                         <Grid item xs={12} sm={12} md={6}>
                             {/*Descripcion: */}
                             <Grid item xs={12} sm={12} md={12}>
+                                <Typography
+                                    sx={{
+                                        m: "auto",
+                                    }}
+                                >
+                                    Categoria: {product.type}
+                                </Typography>
+                                <Divider sx={{
+                                    mt: 1, mb: 1
+                                }}/>
                                 <Typography
                                     sx={{
                                         m: "auto",
@@ -204,21 +188,39 @@ export default function ItemDetail({product, currentQuantity}) {
                                         </Grid>
                                     </>
                                 ) : (
-                                    <><Grid
-                                        container
-                                        direction="row"
-                                        justifyContent="center"
-                                        alignItems="flex-end"
-                                        sx={{mt: 5}}
-                                    >
-                                        <ItemCount
-                                            stock={product.stock}
-                                            initialValue={1}
-                                            maxAvailable={maxAvailable}
-                                            addProduct={handleAddProduct}
-                                        />
-                                    </Grid>
-
+                                    <>
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="center"
+                                            alignItems="flex-end"
+                                            sx={{mt: 5}}
+                                        >
+                                            <Box width="100%">
+                                                {product.stock === 0 ? (
+                                                    <>
+                                                        <Typography
+                                                            variant="h6"
+                                                            sx={{
+                                                                m: "auto",
+                                                                textAlign: "center",
+                                                                justifyContent: "center",
+                                                                fontWeight: "bold"
+                                                            }}
+                                                        >No hay stock del producto</Typography>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <ItemCount
+                                                            stock={product.stock}
+                                                            initialValue={1}
+                                                            maxAvailable={maxAvailable}
+                                                            addProduct={handleAddProduct}
+                                                        />
+                                                    </>
+                                                )}
+                                            </Box>
+                                        </Grid>
                                     </>
                                 )}
                             </Grid>

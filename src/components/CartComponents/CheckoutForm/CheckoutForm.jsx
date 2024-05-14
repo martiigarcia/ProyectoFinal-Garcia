@@ -34,15 +34,13 @@ function CheckoutForm() {
         dateMonthCard: '',
         dateYearCard: ''
     })
-    const [order, setOrder] = useState({})
-    const [emailMatch, setEmailMatch] = useState(true)
     const [errors, setErrors] = useState({})
     const navigate = useNavigate()
     const [payment, setPayment] = React.useState('');
     const [expanded, setExpanded] = React.useState(false);
     const [expiredDate, setExpiredDate] = React.useState(false);
-    const currentYear = new Date().getFullYear(); // Obtener el año actual
     const currentDate = new Date();
+    const currentYear = currentDate.getFullYear(); // Obtener el año actual
 
     const selectPaymentMethod = (event) => {
         setPayment(event.target.value);
@@ -55,6 +53,8 @@ function CheckoutForm() {
             setExpanded(true);
         } else {
             setExpanded(false);
+
+            clearCardErrors()
         }
     };
 
@@ -92,10 +92,8 @@ function CheckoutForm() {
     const validateEmail = () => {
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z]{2,})+$/;
         if (user.email.match(emailRegex)) {
-            setEmailMatch(true)
             return true
         } else {
-            setEmailMatch(false)
             return false
         }
     }
@@ -162,7 +160,37 @@ function CheckoutForm() {
         return Object.keys(errorsDetected).length === 0
     }
 
+    const clearCardErrors = () => {
+        setCard({
+            ownerCard: '',
+            numberCard: '',
+            codeCard: '',
+            dateMonthCard: '',
+            dateYearCard: ''
+        })
+        setExpiredDate(false)
+
+        // Eliminar errores de tarjeta si existen
+        if (errors.hasOwnProperty("ownerCard")) {
+            delete errors.ownerCard;
+        }
+        if (errors.hasOwnProperty("numberCard")) {
+            delete errors.numberCard;
+        }
+        if (errors.hasOwnProperty("codeCard")) {
+            delete errors.codeCard;
+        }
+        if (errors.hasOwnProperty("dateMonthCard")) {
+            delete errors.dateMonthCard;
+        }
+        if (errors.hasOwnProperty("dateYearCard")) {
+            delete errors.dateYearCard;
+        }
+    }
+
     const validateForm = () => {
+        setErrors({})
+
         const errorsDetected = {}
 
         if (!user.name) {
@@ -218,6 +246,28 @@ function CheckoutForm() {
         } else {
             if (user.paymentMethod === "creditCard" || user.paymentMethod === "debitCard") {
                 validateCard();
+            } else {
+                if (user.paymentMethod === "cash" || user.paymentMethod === "other") {
+                    clearCardErrors()
+
+                    // Eliminar errores de tarjeta si existen de errorsDetected
+                    if (errorsDetected.hasOwnProperty("ownerCard")) {
+                        delete errorsDetected.ownerCard;
+                    }
+                    if (errorsDetected.hasOwnProperty("numberCard")) {
+                        delete errorsDetected.numberCard;
+                    }
+                    if (errorsDetected.hasOwnProperty("codeCard")) {
+                        delete errorsDetected.codeCard;
+                    }
+                    if (errorsDetected.hasOwnProperty("dateMonthCard")) {
+                        delete errorsDetected.dateMonthCard;
+                    }
+                    if (errorsDetected.hasOwnProperty("dateYearCard")) {
+                        delete errorsDetected.dateYearCard;
+                    }
+
+                }
             }
         }
 
@@ -243,6 +293,7 @@ function CheckoutForm() {
             const ordersCollection = collection(db, 'purchaseOrders')
 
             try {
+
                 const order = {
                     buyer: user, //usuario comprador
                     card: (user.paymentMethod === "creditCard" || user.paymentMethod === "debitCard") ? card : null, // card es opcional si el metodo de pago es de tarjeta de credito o debito
@@ -251,7 +302,6 @@ function CheckoutForm() {
                     date: Timestamp.now(),  // Fecha actual
                     status: "COMPLETA"
                 };
-
 
                 for (const item of cart) {
                     const productRef = doc(db, 'products', item.id)
@@ -264,7 +314,6 @@ function CheckoutForm() {
                 }
 
                 const orderDocRef = await addDoc(ordersCollection, order)
-
 
                 // Cerrar SweetAlert de carga
                 loadingSwal.close();
@@ -285,13 +334,14 @@ function CheckoutForm() {
 
             } catch (error) {
                 loadingSwal.close();
-
                 await MySwal.fire({
                     title: <p>Error</p>,
                     text: "Algo salio mal... " + error.message,
                     icon: "error",
                 })
             }
+        } else {
+            loadingSwal.close();
         }
     }
 
@@ -359,6 +409,7 @@ function CheckoutForm() {
                                                        onChange={(event) => updateUser(event)}
                                                        error={!!errors.name}
                                                        helperText={errors.name}
+                                                       autoComplete="name"
                                             />
                                         </FormControl>
                                     </Grid>
@@ -371,7 +422,9 @@ function CheckoutForm() {
                                                        placeholder="García" name="surname"
                                                        onChange={(event) => updateUser(event)}
                                                        error={!!errors.surname}
-                                                       helperText={errors.surname}/>
+                                                       helperText={errors.surname}
+                                                // autoComplete="surname"
+                                            />
                                         </FormControl>
                                     </Grid>
                                     <Grid item xs={12} sm={12} md={12}>
@@ -384,7 +437,8 @@ function CheckoutForm() {
                                                        placeholder="correo@example.com" name="email"
                                                        onChange={(event) => updateUser(event)}
                                                        error={!!errors.email}
-                                                       helperText={errors.email}/>
+                                                       helperText={errors.email}
+                                                       autoComplete="email"/>
                                         </FormControl>
                                     </Grid>
 
@@ -398,7 +452,8 @@ function CheckoutForm() {
                                                        placeholder="+54 11 1234-4321" name="phone" type="text"
                                                        onChange={(event) => updateUser(event)}
                                                        error={!!errors.phone}
-                                                       helperText={errors.phone ? errors.phone : "El numero de telefono debe incluir codigo de pais y area"}/>
+                                                       helperText={errors.phone ? errors.phone : "El numero de telefono debe incluir codigo de pais y area"}
+                                                       autoComplete="phone"/>
                                         </FormControl>
                                     </Grid>
 
@@ -413,7 +468,7 @@ function CheckoutForm() {
                                                 Método de pago
                                             </InputLabel>
                                             <Select
-                                                labelId="select-payment"
+                                                labelId="select-payment-label"
                                                 id="select-payment"
                                                 value={payment}
                                                 label="Metodo de pago"
@@ -428,21 +483,19 @@ function CheckoutForm() {
                                                 <MenuItem value="cash">Efectivo o Transferecia</MenuItem>
                                                 <MenuItem value="other">Arreglar con el vendedor</MenuItem>
                                             </Select>
+
                                         </FormControl>
 
 
                                         <Collapse in={expanded} timeout="auto" unmountOnExit
-                                            // sx={{backgroundColor: "#AF44CCFF"}}
                                         >
                                             <CardContent>
-                                                <Typography>
-
-                                                </Typography>
+                                                <Divider sx={{backgroundColor: "#AF44CC"}} variant="middle"/>
                                                 <CardHeader
                                                     title="Datos de la tarjeta"
                                                     subheader="Ingrese sus datos de su tarjeta para completar la compra"
                                                 />
-
+                                                <Divider sx={{backgroundColor: "#AF44CC"}} variant="middle"/>
                                                 <Grid item xs={12} sm={12} md={12}>
                                                     <FormControl fullWidth sx={{
                                                         mb: 1,

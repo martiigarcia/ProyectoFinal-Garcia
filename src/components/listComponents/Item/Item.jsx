@@ -22,7 +22,7 @@ const categoryColorMap = { //Ver si es mejor dejar toodo junto (incial y color) 
 };
 
 const LightTooltip = styled(({className, ...props}) => (
-    <Tooltip {...props} classes={{popper: className}} />
+    <Tooltip {...props} classes={{popper: className}}/>
 ))(({theme}) => ({
     [`& .${tooltipClasses.arrow}`]: {
         color: theme.palette.common.white,
@@ -81,9 +81,13 @@ export default function Item({product}) {
                     alt="image of a beer"
                 />
                 <CardContent>
-                    <Typography variant="body2" color="text.secondary">
-                        Precio por pinta: $ {product.priceperpinta}
+                    <Typography variant="body1" color="text.secondary"
+                                sx={{fontWeight: product.stock === 0 && "bold"}}
+                    >
+                        {product.stock === 0 ? "SIN STOCK" : `Precio por pinta: $${product.priceperpinta}`}
                     </Typography>
+
+
                 </CardContent>
                 <CardActions disableSpacing sx={{textAlign: 'center', display: 'flex', justifyContent: 'center'}}>
                     {/*<LightTooltip title="Marcar Favorita" arrow>*/}
@@ -93,10 +97,11 @@ export default function Item({product}) {
                     {/*        />*/}
                     {/*    </IconButton>*/}
                     {/*</LightTooltip>*/}
+
+
                     <LightTooltip title="Ver detalle de cerveza" arrow>
                         <Link to={"/item/" + product.id}>
                             <Button aria-label="detail"
-                                // variant="outlined"
                                     sx={{
                                         borderColor: '#AF44CC',
                                         color: '#AF44CC',
@@ -106,13 +111,16 @@ export default function Item({product}) {
                                             backgroundColor: "#AF44CC"
                                         },
                                     }}
-                                    endIcon={
-                                        <InfoOutlinedIcon
-                                        />}
-                            >Ver en detalle
+                                    endIcon=
+                                        {
+                                            <InfoOutlinedIcon/>
+                                        }
+                            >
+                                Ver en detalle
                             </Button>
                         </Link>
                     </LightTooltip>
+
                     {/*<LightTooltip title="Añadir al carrito" arrow>*/}
                     {/*    <IconButton aria-label="add to shopping cart" sx={{ml: 'auto'}}>*/}
                     {/*        <AddShoppingCartIcon*/}
