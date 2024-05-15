@@ -38,7 +38,6 @@ function CheckoutForm() {
     const navigate = useNavigate()
     const [payment, setPayment] = React.useState('');
     const [expanded, setExpanded] = React.useState(false);
-    const [expiredDate, setExpiredDate] = React.useState(false);
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear(); // Obtener el año actual
 
@@ -70,6 +69,7 @@ function CheckoutForm() {
         const value = event.target.value;
         const errorsDetected = {}
 
+
         if (name === "dateMonthCard") {
             if (value > 12 || value < 1)
                 errorsDetected.dateMonthCard = "El mes debe ser un numero comprendido entre el 1 (Enero) y 12 (Diciembre)."
@@ -81,7 +81,9 @@ function CheckoutForm() {
             }
         }
 
-        setErrors(errorsDetected)
+        setErrors((prevErrors) => {
+            return Object.assign({}, prevErrors, errorsDetected);
+        });
 
         setCard((card) => ({
             ...card,
@@ -103,10 +105,8 @@ function CheckoutForm() {
         const expirationDate = new Date(card.dateYearCard, card.dateMonthCard - 1);
 
         if (expirationDate <= currentDate) {
-            setExpiredDate(true)
             return true
         } else {
-            setExpiredDate(false)
             return false
         }
     }
@@ -143,7 +143,9 @@ function CheckoutForm() {
             }
         }
         // Validacion de fecha de vencimeinto
-        validateExpiredDate()
+        if (validateExpiredDate()) {
+            errorsDetected.expiredDate = "La tarjeta se encuentra con fecha de vencimiento expirada.";
+        }
 
         // Validación del código de seguridad (CVV)
         if (!card.codeCard) {
@@ -154,10 +156,8 @@ function CheckoutForm() {
                 errorsDetected.codeCard = "El código de seguridad debe tener 3 o 4 dígitos numericos.";
             }
         }
-        setErrors((prevErrors) => {
-            return Object.assign({}, prevErrors, errorsDetected);
-        });
-        return Object.keys(errorsDetected).length === 0
+
+        return errorsDetected
     }
 
     const clearCardErrors = () => {
@@ -166,9 +166,9 @@ function CheckoutForm() {
             numberCard: '',
             codeCard: '',
             dateMonthCard: '',
-            dateYearCard: ''
+            dateYearCard: '',
+            expiredDate: ''
         })
-        setExpiredDate(false)
 
         // Eliminar errores de tarjeta si existen
         if (errors.hasOwnProperty("ownerCard")) {
@@ -186,12 +186,18 @@ function CheckoutForm() {
         if (errors.hasOwnProperty("dateYearCard")) {
             delete errors.dateYearCard;
         }
+        if (errors.hasOwnProperty("expiredDate")) {
+            delete errors.expiredDate;
+        }
     }
 
     const validateForm = () => {
+
         setErrors({})
 
         const errorsDetected = {}
+        let cardErrorsDetected = {};
+
 
         if (!user.name) {
             errorsDetected.name = "El campo 'Nombre' es obligatorio."
@@ -245,7 +251,9 @@ function CheckoutForm() {
             errorsDetected.payment = "El campo 'Metodo de Pago' es obligatorio."
         } else {
             if (user.paymentMethod === "creditCard" || user.paymentMethod === "debitCard") {
-                validateCard();
+                cardErrorsDetected = validateCard();
+                // Combinar errores detectados en validateCard con los errores preexistentes
+                Object.assign(errorsDetected, cardErrorsDetected);
             } else {
                 if (user.paymentMethod === "cash" || user.paymentMethod === "other") {
                     clearCardErrors()
@@ -319,8 +327,8 @@ function CheckoutForm() {
                 loadingSwal.close();
 
                 const text = `La compra se ha realizado exitosamente!
-                        <br/>El dia: ${order.date.toDate().toLocaleDateString('es-ES')}
-                         <br/>Código de compra: ${orderDocRef.id}`
+                            <br/>El dia: ${order.date.toDate().toLocaleDateString('es-ES')}
+                             <br/>Código de compra: ${orderDocRef.id}`
                 ;
 
                 MySwal.fire({
@@ -545,7 +553,7 @@ function CheckoutForm() {
                                                                        inputMode: 'numeric',
                                                                    }}
                                                                    onChange={(event) => updateCard(event)}
-                                                                   error={!!errors.dateMonthCard || !!expiredDate}
+                                                                   error={!!errors.dateMonthCard || !!errors.expiredDate}
                                                                    helperText={errors.dateMonthCard ? errors.dateMonthCard : "Ingrese el mes que aparece en su tarjeta."}
                                                         />
 
@@ -553,17 +561,16 @@ function CheckoutForm() {
                                                                    label="Año de Vencimiento" color="secondary"
                                                                    placeholder="2024" name="dateYearCard" type="number"
                                                                    onChange={(event) => updateCard(event)}
-                                                                   error={!!errors.dateYearCard || !!expiredDate}
+                                                                   error={!!errors.dateYearCard || !!errors.expiredDate}
                                                                    helperText={errors.dateYearCard ? errors.dateYearCard : "Ingrese el año que aparece en su tarjeta."}
                                                         />
                                                     </FormControl>
-                                                    {expiredDate && (
+                                                    {errors.expiredDate && (
                                                         <Typography
                                                             sx={{
                                                                 textAlign: 'left',
                                                                 color: "#d91919"
-                                                            }}>La tarjeta se encuentra con fecha de vencimiento
-                                                            expirada.</Typography>)}
+                                                            }}>{errors.expiredDate}</Typography>)}
 
                                                 </Grid>
 
@@ -610,7 +617,7 @@ function CheckoutForm() {
                                     <Grid item xs={12} sm={12} md={12} sx={{mt: 5, mb: 2}}>
                                         <Divider sx={{backgroundColor: "#AF44CC"}} variant="middle"/>
                                         <Button
-                                            onClick={() => buy()}
+                                            onClick={(event) => buy(event)}
                                             sx={{
                                                 mt: 2, mb: 2,
                                                 borderColor: '#AF44CC',
