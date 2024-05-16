@@ -69,17 +69,8 @@ function CheckoutForm() {
         const value = event.target.value;
         const errorsDetected = {}
 
-
-        if (name === "dateMonthCard") {
-            if (value > 12 || value < 1)
-                errorsDetected.dateMonthCard = "El mes debe ser un numero comprendido entre el 1 (Enero) y 12 (Diciembre)."
-        }
-
-        if (name === "dateYearCard") {
-            if (parseInt(value) < currentYear) {
-                errorsDetected.dateYearCard = "El año debe ser igual o mayor al año actual.";
-            }
-        }
+        const cardErrors = validateDate(name, value);
+        Object.assign(errorsDetected, cardErrors);
 
         setErrors((prevErrors) => {
             return Object.assign({}, prevErrors, errorsDetected);
@@ -98,6 +89,33 @@ function CheckoutForm() {
         } else {
             return false
         }
+    }
+
+    const validateDate = (name, value) => {
+
+        const errorsDetected = {};
+
+        if (name === "dateMonthCard") {
+            if (value > 12 || value < 1) {
+                errorsDetected.dateMonthCard = "El mes debe ser un numero comprendido entre el 1 (Enero) y 12 (Diciembre)."
+            } else {
+                if (errors.hasOwnProperty("dateMonthCard")) {
+                    delete errors.dateMonthCard;
+                }
+            }
+        }
+
+        if (name === "dateYearCard") {
+            if (parseInt(value) < currentYear) {
+                errorsDetected.dateYearCard = "El año debe ser igual o mayor al año actual.";
+            } else {
+                if (errors.hasOwnProperty("dateYearCard")) {
+                    delete errors.dateYearCard;
+                }
+            }
+        }
+
+        return errorsDetected;
     }
 
     const validateExpiredDate = () => {
@@ -142,10 +160,30 @@ function CheckoutForm() {
                 }
             }
         }
-        // Validacion de fecha de vencimeinto
-        if (validateExpiredDate()) {
-            errorsDetected.expiredDate = "La tarjeta se encuentra con fecha de vencimiento expirada.";
+
+        //Primero: Validaciones del mes
+        if (!card.dateMonthCard) {
+            errorsDetected.dateMonthCard = "El mes no puede ser vacio.";
+        } else {
+            const cardErrors = validateDate("dateMonthCard", card.dateMonthCard)
+            Object.assign(errorsDetected, cardErrors);
         }
+
+        //Segundo: Validaciones del año
+        if (!card.dateYearCard) {
+            errorsDetected.dateYearCard = "El año no puede ser vacio.";
+        } else {
+            const cardErrors = validateDate("dateYearCard", card.dateYearCard);
+            Object.assign(errorsDetected, cardErrors);
+        }
+
+        // Tercero: validacion de fecha de vencimiento (solo si mes y año no son vacias)
+        if (card.dateMonthCard && card.dateYearCard) {
+            if (validateExpiredDate()) {
+                errorsDetected.expiredDate = "La tarjeta se encuentra con fecha de vencimiento expirada.";
+            }
+        }
+
 
         // Validación del código de seguridad (CVV)
         if (!card.codeCard) {
@@ -252,8 +290,7 @@ function CheckoutForm() {
         } else {
             if (user.paymentMethod === "creditCard" || user.paymentMethod === "debitCard") {
                 cardErrorsDetected = validateCard();
-                // Combinar errores detectados en validateCard con los errores preexistentes
-                Object.assign(errorsDetected, cardErrorsDetected);
+                Object.assign(errorsDetected, cardErrorsDetected); // Combinar errores detectados en validateCard con los errores preexistentes
             } else {
                 if (user.paymentMethod === "cash" || user.paymentMethod === "other") {
                     clearCardErrors()
@@ -521,59 +558,6 @@ function CheckoutForm() {
                                                     </FormControl>
                                                 </Grid>
 
-                                                <Grid item xs={12} sm={12} md={12} sx={{mt: 3}}>
-                                                    <Grid container direction="row" alignItems="center">
-                                                        <Typography
-                                                            sx={{
-                                                                textAlign: 'left',
-                                                                color: "#666666"
-                                                            }}
-                                                            variant="body1"
-                                                        >Fecha de vencimiento:
-                                                        </Typography>
-                                                    </Grid>
-                                                    <FormControl
-                                                        sx={{
-                                                            mb: 3,
-                                                            mt: 2,
-                                                            display: 'flex',
-                                                            flexDirection: 'row',
-                                                            alignItems: 'center'
-                                                        }}
-                                                        color="secondary"
-                                                        variant="filled">
-
-                                                        <TextField fullWidth variant="outlined"
-                                                                   label="Mes de Vencimiento" color="secondary"
-                                                                   placeholder="4" name="dateMonthCard" type="number"
-                                                                   inputProps={{
-                                                                       step: 1,
-                                                                       min: 1,
-                                                                       max: 12,
-                                                                       inputMode: 'numeric',
-                                                                   }}
-                                                                   onChange={(event) => updateCard(event)}
-                                                                   error={!!errors.dateMonthCard || !!errors.expiredDate}
-                                                                   helperText={errors.dateMonthCard ? errors.dateMonthCard : "Ingrese el mes que aparece en su tarjeta."}
-                                                        />
-
-                                                        <TextField fullWidth variant="outlined"
-                                                                   label="Año de Vencimiento" color="secondary"
-                                                                   placeholder="2024" name="dateYearCard" type="number"
-                                                                   onChange={(event) => updateCard(event)}
-                                                                   error={!!errors.dateYearCard || !!errors.expiredDate}
-                                                                   helperText={errors.dateYearCard ? errors.dateYearCard : "Ingrese el año que aparece en su tarjeta."}
-                                                        />
-                                                    </FormControl>
-                                                    {errors.expiredDate && (
-                                                        <Typography
-                                                            sx={{
-                                                                textAlign: 'left',
-                                                                color: "#d91919"
-                                                            }}>{errors.expiredDate}</Typography>)}
-
-                                                </Grid>
-
 
                                                 <Grid item xs={12} sm={12} md={12}>
                                                     <FormControl fullWidth sx={{
@@ -607,6 +591,80 @@ function CheckoutForm() {
                                                                    helperText={errors.codeCard ? errors.codeCard : "CVV - CSC: Debe ingresar 3 o 4 digitos."}
                                                         />
                                                     </FormControl>
+                                                </Grid>
+
+                                                <Grid item xs={12} sm={12} md={12} sx={{mt: 3}}>
+                                                    <Grid container direction="row" alignItems="center">
+                                                        <Typography
+                                                            sx={{
+                                                                textAlign: 'left',
+                                                                color: "#666666"
+                                                            }}
+                                                            variant="body1"
+                                                        >Fecha de vencimiento:
+                                                        </Typography>
+                                                    </Grid>
+                                                    <FormControl
+                                                        sx={{
+                                                            mb: 3,
+                                                            mt: 2,
+                                                            display: 'flex',
+                                                            flexDirection: 'row',
+                                                            alignItems: 'center'
+                                                        }}
+                                                        color="secondary"
+                                                        variant="filled">
+
+                                                        <TextField fullWidth variant="outlined"
+                                                                   label="Mes de Vencimiento" color="secondary"
+                                                                   placeholder="4" name="dateMonthCard" type="number"
+                                                                   inputProps={{
+                                                                       step: 1,
+                                                                       min: 1,
+                                                                       max: 12,
+                                                                       inputMode: 'numeric',
+                                                                   }}
+                                                                   onChange={(event) => updateCard(event)}
+                                                                   error={!!errors.dateMonthCard || !!errors.expiredDate}
+                                                                   helperText={
+                                                                       errors.expiredDate
+                                                                           ? '' // No hay mensaje de ayuda si hay un error en expiredDate
+                                                                           : errors.dateMonthCard
+                                                                               ? errors.dateMonthCard
+                                                                               : "Ingrese el mes que aparece en su tarjeta."
+                                                                   }
+                                                        />
+
+                                                        <TextField fullWidth variant="outlined"
+                                                                   label="Año de Vencimiento" color="secondary"
+                                                                   placeholder="2024" name="dateYearCard" type="number"
+                                                                   onChange={(event) => updateCard(event)}
+                                                                   error={!!errors.dateYearCard || !!errors.expiredDate}
+                                                                   helperText={
+                                                                       errors.expiredDate
+                                                                           ? '' // No hay mensaje de ayuda si hay un error en expiredDate
+                                                                           : errors.dateYearCard
+                                                                               ? errors.dateYearCard
+                                                                               : "Ingrese el año que aparece en su tarjeta."
+                                                                   }
+                                                        />
+                                                    </FormControl>
+                                                    {errors.expiredDate && (
+                                                        <Typography
+                                                            sx={{
+                                                                p: 2,
+                                                                border: 1,
+                                                                borderColor: "#d91919",
+                                                                backgroundColor: "#d91919",
+                                                                justifyContent: "center",
+                                                                textAlign: 'center',
+                                                                color: "#ffffff",
+                                                                fontWeight: "bold"
+                                                            }}
+                                                        >
+                                                            {errors.expiredDate}
+                                                        </Typography>)}
+
                                                 </Grid>
 
                                             </CardContent>
