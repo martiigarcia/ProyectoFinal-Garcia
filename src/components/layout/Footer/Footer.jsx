@@ -8,12 +8,12 @@ import Divider from "@mui/material/Divider";
 function Copyright() {
     return (
         <Typography variant="body2" color="#FFFFFF" align="center">
-            {'Copyright © '}
-            <Link to="https://mui.com/" style={{color: '#e05eff'}}>
-                Your Website
-            </Link>{' '}
+            {'Copyright © MAG'}{' - '}
             {new Date().getFullYear()}
-            {'.'}
+            <br/>
+            <Link to="https://linktr.ee/martinagarciaa" style={{color: '#e05eff', fontSize:20}}>
+                Mi Contacto
+            </Link>
         </Typography>
     );
 }
